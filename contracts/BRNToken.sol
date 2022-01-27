@@ -75,7 +75,7 @@ contract BRNToken is Ownable, IBEP2E, ReentrancyGuard  {
   * @return uint the total balance of the specied address
   */
   function balanceOf(address account) public view returns (uint256){
-
+    return balances[account];
   }
 
   /**
@@ -87,7 +87,13 @@ contract BRNToken is Ownable, IBEP2E, ReentrancyGuard  {
   * @return bool success if the transfer was successfull otherwise false
   */
   function transfer(address recipient, uint256 amount) public nonReentrant returns (bool){
-
+    uint senderTokenBalance = balances[msg.sender];
+    require(recipient != address(0),"Token Transfer: Invalid Recipient");
+    require(amount >= senderTokenBalance,"Token Transfer: Insufficient Balance");
+    balances[msg.sender] = balances[msg.sender].sub(amount); //use safemath to prevent integer underflow
+    balances[recipient] = balances[recipient].add(amount); //use safemath to prevent integer overflow
+    emit Transfer(msg.sender, recipient, amount);
+    return true;
   }
 
   /**
