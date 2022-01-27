@@ -1,16 +1,19 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 import './interfaces/IBEP2E.sol';
+import '@openzeppelin/contracts/access/Ownable.sol';
+import '@openzeppelin/contracts/utils/math/SafeMath.sol';
 
-contract BRNToken is IBEP2E {
+contract BRNToken is Ownable, IBEP2E {
+  using SafeMath for uint256;
 
   string public _name;
   string public _symbol;
-  uint public _totalSuplly;
+  uint private _totalSuplly;
   uint public _decimals;
 
-  mapping(address => uint) public balances;
-  mapping(address => mapping(address => uint)) public allowances;
+  mapping(address => uint) private balances;
+  mapping(address => mapping(address => uint)) private allowances;
 
   constructor() public {
     _name = "BRN Token";
@@ -38,6 +41,10 @@ contract BRNToken is IBEP2E {
     return _totalSuplly;
   }
 
+  function getOwner() public view returns (address){
+    return owner();
+  }
+
   function balanceOf(address account) public view returns (uint256){
 
   }
@@ -55,11 +62,6 @@ contract BRNToken is IBEP2E {
   }
 
   function approve(address spender, uint256 amount) public returns (bool){
-
-  }
-
-
-  function getOwner() public view returns (address){
 
   }
 
