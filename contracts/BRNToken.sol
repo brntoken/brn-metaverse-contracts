@@ -1,10 +1,11 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 pragma abicoder v2;
+
 import '@openzeppelin/contracts/access/Ownable.sol';
 import '@openzeppelin/contracts/utils/math/SafeMath.sol';
 import '@openzeppelin/contracts/security/ReentrancyGuard.sol';
-import './interfaces/IBEP2E.sol';
+import './IBEP2E.sol';
 
 //ReentrancyGuard
 contract BRNToken is Ownable, IBEP2E  {
@@ -22,7 +23,7 @@ contract BRNToken is Ownable, IBEP2E  {
     _name = "BRN Token";
     _symbol = "BRN";
     _decimals = 18;
-    _totalSuplly = 1000000000 * 10 ** _decimals;
+    _totalSuplly = 1000000000;
     balances[msg.sender] = balances[msg.sender].add(_totalSuplly);
     emit Transfer(address(0), msg.sender, _totalSuplly);
   }
@@ -87,13 +88,8 @@ contract BRNToken is Ownable, IBEP2E  {
   * @return bool success if the transfer was successfull otherwise false
   */
   function transfer(address recipient, uint256 amount) public override returns (bool){ //nonReentrant
-    uint senderTokenBalance = balances[msg.sender];
-    require(recipient != address(0),"Token Transfer: Invalid Recipient");
-    require(amount >= senderTokenBalance,"Token Transfer: Insufficient Balance");
-    balances[msg.sender] = balances[msg.sender].sub(amount); //use safemath to prevent integer underflow
-    balances[recipient] = balances[recipient].add(amount); //use safemath to prevent integer overflow
-    emit Transfer(msg.sender, recipient, amount);
-    return true;
+      _transfer(msg.sender, recipient, amount);
+      return true;
   }
 
   /**
@@ -108,13 +104,7 @@ contract BRNToken is Ownable, IBEP2E  {
   * @return true if the transfer event was successfull
   */
   function transferFrom(address sender, address recipient, uint256 amount) public override returns (bool){ //nonReentrant
-    require(sender != address(0),"Token Transfer: Invalid Sender Address");
-    require(recipient != address(0),"Token Transfer: Invalid Recipient");
-    uint senderTokenBalance = balances[sender];
-    require(amount >= senderTokenBalance,"Token Transfer: Insufficient Balance");
-    balances[sender] = balances[sender].sub(amount);
-    balances[recipient] = balances[recipient].add(amount);
-    emit Transfer(sender, recipient, amount);
+    _transfer(sender, recipient,amount);
     return true;
   }
 
@@ -149,4 +139,19 @@ contract BRNToken is Ownable, IBEP2E  {
 
   }
 
+  /**
+  * -- INTERNAL FUNCTIONS -- 
+  */
+
+  function _transfer(address _sender, address _recipient, uint _amount) public {
+    uint senderTokenBalance = balances[_sender];
+    require(_recipient != address(0),"Token Transfer: Invalid Recipient");
+    //require(amount >= senderTokenBalance,"Token Transfer: Insufficient Balance");
+    if(_amount < senderTokenBalance){
+      revert("Token Transfer: Insufficient Balance");
+    }
+    balances[_sender] = balances[_sender].sub(_amount); //use safemath to prevent integer underflow
+    balances[_recipient] = balances[_recipient].add(_amount); //use safemath to prevent integer overflow
+    emit Transfer(msg.sender, _recipient, _amount);
+  }
 }
