@@ -5,19 +5,19 @@ pragma abicoder v2;
 import '@openzeppelin/contracts/access/Ownable.sol';
 import '@openzeppelin/contracts/utils/math/SafeMath.sol';
 import '@openzeppelin/contracts/security/ReentrancyGuard.sol';
-import './IBEP2E.sol';
+import './interfaces/IBEP2E.sol';
 
 //ReentrancyGuard
 contract BRNToken is Ownable, IBEP2E  {
   using SafeMath for uint256;
 
-  string public _name;
-  string public _symbol;
-  uint private _totalSuplly;
-  uint public _decimals;
+  string public _name; //token name
+  string public _symbol; //token symbol 
+  uint private _totalSuplly; //total supply
+  uint public _decimals; //the total number of decimal represenations
 
-  mapping(address => uint) private balances;
-  mapping(address => mapping(address => uint)) private allowances;
+  mapping(address => uint) private balances; //how token much does this address have
+  mapping(address => mapping(address => uint)) private allowances; //the amount approved by the owner to be spent on their behalf
 
   constructor() public {
     _name = "BRN Token";
