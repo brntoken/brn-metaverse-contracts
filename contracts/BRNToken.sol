@@ -82,6 +82,7 @@ contract BRNToken is Ownable, IBEP2E, ReentrancyGuard  {
   * @notice transfer a specicied amount pf tokens to a recipient address
   * @dev the recipient address should not be an empty address address(0)
   * @dev the sender's total balance must be equal to or greater than the amount specified
+  * @dev the nonReentrant modifier protects this function from reentrancy attacks
   * @param address recipient the person receiving the tokens
   * @param uint amount the amount of tokens to be sent to the specied address as the recepient
   * @return bool success if the transfer was successfull otherwise false
@@ -101,11 +102,18 @@ contract BRNToken is Ownable, IBEP2E, ReentrancyGuard  {
   * @dev both the sender and recipient address should not be the empty address, address(0)
   * @dev the amount of tokens being moved from the sender to the recipient address should 
   * @dev not be less than the sender's total balances
-  * @dev the nonReentrant protects this function from reentrancy attacks
+  * @dev the nonReentrant modifier protects this function from reentrancy attacks
   * @return true if the transfer event was successfull
   */
   function transferFrom(address sender, address recipient, uint256 amount) public nonReentrant returns (bool){
-
+    require(sender != address(0),"Token Transfer: Invalid Sender Address");
+    require(recipient != address(0),"Token Transfer: Invalid Recipient");
+    uint senderTokenBalance = balances[sender];
+    require(amount >= senderTokenBalance,"Token Transfer: Insufficient Balance");
+    balances[sender] = balances[sender].sub(amount);
+    balances[recipient] = balances[recipient].add(amount);
+    emit Transfer(sender, recipient, amount);
+    return true;
   }
 
   /**
