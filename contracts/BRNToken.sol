@@ -19,7 +19,7 @@ contract BRNToken is IBEP2E {
     _totalSuplly = 1000000000 * 10 ** _decimals;
   }
 
-  event Approval(address indexed owner, address indexed spender, uint256 value);
+  event Transfer(address indexed from, address indexed to, uint256 value);
   event Approval(address indexed owner, address indexed spender, uint256 value)
 
   function name() public view returns(string){
