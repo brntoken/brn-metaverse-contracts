@@ -1,11 +1,13 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
-import './interfaces/IBEP2E.sol';
+pragma abicoder v2;
 import '@openzeppelin/contracts/access/Ownable.sol';
 import '@openzeppelin/contracts/utils/math/SafeMath.sol';
 import '@openzeppelin/contracts/security/ReentrancyGuard.sol';
+import './interfaces/IBEP2E.sol';
 
-contract BRNToken is Ownable, IBEP2E, ReentrancyGuard  {
+//ReentrancyGuard
+contract BRNToken is Ownable, IBEP2E  {
   using SafeMath for uint256;
 
   string public _name;
@@ -25,14 +27,11 @@ contract BRNToken is Ownable, IBEP2E, ReentrancyGuard  {
     emit Transfer(address(0), msg.sender, _totalSuplly);
   }
 
-  event Transfer(address indexed from, address indexed to, uint256 value);
-  event Approval(address indexed owner, address indexed spender, uint256 value)
-
   /**
   * @notice token name
   * @return string token name
   */
-  function name() public view returns(string){
+  function name() public view override returns(string memory){
     return _name;
   }
 
@@ -40,7 +39,7 @@ contract BRNToken is Ownable, IBEP2E, ReentrancyGuard  {
   * @notice token symbol
   * @return string symbol. The Token Symbol
   */
-  function symbol() public view returns(string){
+  function symbol() public view override returns(string memory){
     return _symbol;
   }
 
@@ -48,7 +47,7 @@ contract BRNToken is Ownable, IBEP2E, ReentrancyGuard  {
   * @notice the total number of decimals for the BRN token
   * @return uint number of decimals
   */
-  function decimals() pulic view returns(uint){
+  function decimals() public view override returns(uint){
     return _decimals;
   }
 
@@ -56,7 +55,7 @@ contract BRNToken is Ownable, IBEP2E, ReentrancyGuard  {
   * @notice the total token supply in circulation
   * @return uint total supply
   */
-  function totalSupply() public view returns(uint){
+  function totalSupply() public view override returns(uint){
     return _totalSuplly;
   }
 
@@ -64,17 +63,17 @@ contract BRNToken is Ownable, IBEP2E, ReentrancyGuard  {
   * @notice should return the address of the contract owner
   * @return address the owner address specified in the Ownable contract
   */
-  function getOwner() public view returns (address){
+  function getOwner() public view override returns (address){
     return owner();
   }
   
   /**
   * @notice how much token balance does this address have
   * @dev the account should not be the zero address , address(0)
-  * @param address account the address to which we want to determine their token balance
+  * @param account account the address to which we want to determine their token balance
   * @return uint the total balance of the specied address
   */
-  function balanceOf(address account) public view returns (uint256){
+  function balanceOf(address account) public view override returns (uint256){
     return balances[account];
   }
 
@@ -83,11 +82,11 @@ contract BRNToken is Ownable, IBEP2E, ReentrancyGuard  {
   * @dev the recipient address should not be an empty address address(0)
   * @dev the sender's total balance must be equal to or greater than the amount specified
   * @dev the nonReentrant modifier protects this function from reentrancy attacks
-  * @param address recipient the person receiving the tokens
-  * @param uint amount the amount of tokens to be sent to the specied address as the recepient
+  * @param recipient address the person receiving the tokens
+  * @param amount uint the amount of tokens to be sent to the specied address as the recepient
   * @return bool success if the transfer was successfull otherwise false
   */
-  function transfer(address recipient, uint256 amount) public nonReentrant returns (bool){
+  function transfer(address recipient, uint256 amount) public override returns (bool){ //nonReentrant
     uint senderTokenBalance = balances[msg.sender];
     require(recipient != address(0),"Token Transfer: Invalid Recipient");
     require(amount >= senderTokenBalance,"Token Transfer: Insufficient Balance");
@@ -103,9 +102,12 @@ contract BRNToken is Ownable, IBEP2E, ReentrancyGuard  {
   * @dev the amount of tokens being moved from the sender to the recipient address should 
   * @dev not be less than the sender's total balances
   * @dev the nonReentrant modifier protects this function from reentrancy attacks
+  * @param sender address
+  * @param recipient address
+  * @param amount uint
   * @return true if the transfer event was successfull
   */
-  function transferFrom(address sender, address recipient, uint256 amount) public nonReentrant returns (bool){
+  function transferFrom(address sender, address recipient, uint256 amount) public override returns (bool){ //nonReentrant
     require(sender != address(0),"Token Transfer: Invalid Sender Address");
     require(recipient != address(0),"Token Transfer: Invalid Recipient");
     uint senderTokenBalance = balances[sender];
@@ -119,22 +121,22 @@ contract BRNToken is Ownable, IBEP2E, ReentrancyGuard  {
   /**
   * @notice returns the amount that owner appoved as allowance for the spender
   * @dev both the owner and spender addresses should not be empty addresse address(0)
-  * @param address _owner the owner address
-  * @param _spender the spender address
+  * @param _owner address the owner address
+  * @param _spender address the spender address
   * @return uint, the amount approved for spending
   */
-  function allowance(address _owner, address _spender) public view returns (uint256){
-    return allowances[_owner][spender];
+  function allowance(address _owner, address _spender) public view override returns (uint256){
+    return allowances[_owner][_spender];
   }
 
   /**
   * @notice enables the token holder to add a new address than can spend the tokens on their behalf
   * @dev the spender address should not be an empty address(0)
   * @dev the amount to be approved should not be less than the sender's balance
-  * @param _spender address , the approved address
+  * @param _spender address, the approved address
   * @param _amount uint , the amount to approved by the token holder
   */
-  function approve(address _spender, uint256 _amount) public returns (bool){
+  function approve(address _spender, uint256 _amount) public override returns (bool){
     uint senderTokenBalance = balances[msg.sender];
     require(_amount >= senderTokenBalance,"Token Approval: Insufficient Balance");
     require(_spender != address(0),"Token Approval: Invalid Spender Address");
@@ -143,7 +145,7 @@ contract BRNToken is Ownable, IBEP2E, ReentrancyGuard  {
     return true;
   }
 
-  function withdraw() public nonReentrant onlyOwner{
+  function withdraw() public onlyOwner { //nonReentrant
 
   }
 
