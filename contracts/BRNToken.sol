@@ -117,14 +117,30 @@ contract BRNToken is Ownable, IBEP2E, ReentrancyGuard  {
   }
 
   /**
-  * 
+  * @notice returns the amount that owner appoved as allowance for the spender
+  * @dev both the owner and spender addresses should not be empty addresse address(0)
+  * @param address _owner the owner address
+  * @param _spender the spender address
+  * @return uint, the amount approved for spending
   */
-  function allowance(address _owner, address spender) public view returns (uint256){
-
+  function allowance(address _owner, address _spender) public view returns (uint256){
+    return allowances[_owner][spender];
   }
 
-  function approve(address spender, uint256 amount) public returns (bool){
-
+  /**
+  * @notice enables the token holder to add a new address than can spend the tokens on their behalf
+  * @dev the spender address should not be an empty address(0)
+  * @dev the amount to be approved should not be less than the sender's balance
+  * @param _spender address , the approved address
+  * @param _amount uint , the amount to approved by the token holder
+  */
+  function approve(address _spender, uint256 _amount) public returns (bool){
+    uint senderTokenBalance = balances[msg.sender];
+    require(_amount >= senderTokenBalance,"Token Approval: Insufficient Balance");
+    require(_spender != address(0),"Token Approval: Invalid Spender Address");
+    allowances[msg.sender][_spender] = _amount;
+    emit Approval(msg.sender, _spender, _amount);
+    return true;
   }
 
   function withdraw() public nonReentrant onlyOwner{
