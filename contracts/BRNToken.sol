@@ -20,6 +20,8 @@ contract BRNToken is Ownable, IBEP2E {
     _symbol = "BRN";
     _decimals = 18;
     _totalSuplly = 1000000000 * 10 ** _decimals;
+    balances[msg.sender] = balances[msg.sender].add(_totalSuplly);
+    emit Transfer(address(0), msg.sender, _totalSuplly);
   }
 
   event Transfer(address indexed from, address indexed to, uint256 value);
