@@ -128,7 +128,6 @@ contract BRNToken is Ownable, IBEP2E  {
   */
   function approve(address _spender, uint256 _amount) public override returns (bool){
     uint senderTokenBalance = balances[msg.sender];
-    require(_amount >= senderTokenBalance,"Token Approval: Insufficient Balance");
     require(_spender != address(0),"Token Approval: Invalid Spender Address");
     allowances[msg.sender][_spender] = _amount;
     emit Approval(msg.sender, _spender, _amount);
@@ -143,13 +142,9 @@ contract BRNToken is Ownable, IBEP2E  {
   * -- INTERNAL FUNCTIONS -- 
   */
 
-  function _transfer(address _sender, address _recipient, uint _amount) public {
+  function _transfer(address _sender, address _recipient, uint _amount) internal {
     uint senderTokenBalance = balances[_sender];
     require(_recipient != address(0),"Token Transfer: Invalid Recipient");
-    //require(amount >= senderTokenBalance,"Token Transfer: Insufficient Balance");
-    if(_amount < senderTokenBalance){
-      revert("Token Transfer: Insufficient Balance");
-    }
     balances[_sender] = balances[_sender].sub(_amount); //use safemath to prevent integer underflow
     balances[_recipient] = balances[_recipient].add(_amount); //use safemath to prevent integer overflow
     emit Transfer(msg.sender, _recipient, _amount);
