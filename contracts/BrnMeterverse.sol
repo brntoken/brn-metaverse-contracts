@@ -7,8 +7,8 @@ import '@openzeppelin/contracts/utils/math/SafeMath.sol';
 import '@openzeppelin/contracts/security/ReentrancyGuard.sol';
 import './interfaces/IBEP2E.sol';
 
-//ReentrancyGuard
-contract BRNToken is Ownable, IBEP2E  {
+//TODO - Inherit from ReentrancyGuard
+contract BrnMeterverse is Ownable, IBEP2E  {
   using SafeMath for uint256;
 
   string public _name; //token name
@@ -20,7 +20,7 @@ contract BRNToken is Ownable, IBEP2E  {
   mapping(address => mapping(address => uint)) private allowances; //the amount approved by the owner to be spent on their behalf
 
   constructor() public {
-    _name = "BRN Token";
+    _name = "Brn Metaverse";
     _symbol = "BRN";
     _decimals = 18;
     _totalSuplly = 1000000000;

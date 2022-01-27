@@ -1,5 +1,5 @@
 {
-  "contractName": "BRNTokenSale",
+  "contractName": "BrnMeterverseSale",
   "abi": [
     {
       "inputs": [],
@@ -7,20 +7,20 @@
       "type": "constructor"
     }
   ],
-  "metadata": "{\"compiler\":{\"version\":\"0.8.11+commit.d7f03943\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"/D/Dickens/Programming/Blockchain/Projects/JOBS/mrn-token/contracts/BRNTokenSale.sol\":\"BRNTokenSale\"},\"evmVersion\":\"byzantium\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"/D/Dickens/Programming/Blockchain/Projects/JOBS/mrn-token/contracts/BRNTokenSale.sol\":{\"keccak256\":\"0x362a19a894b4655a1d3bfc3f0c58ad165ff6d30fabbf0cf92031b3d038528269\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://1bf38e304437d9b55ef45303a03dce3ef65073c362258287fa53ccbc9c34789d\",\"dweb:/ipfs/Qmbi8gTG5FmYNQKcBFmP2A5vys6qJXUNDu4gP1zpqrRLxX\"]}},\"version\":1}",
-  "bytecode": "0x6080604052348015600f57600080fd5b50603f80601d6000396000f3fe6080604052600080fdfea26469706673582212205b051beeba50475253abb0d341240d574744347abcf5bba0f1a934a30c4749f164736f6c634300080b0033",
-  "deployedBytecode": "0x6080604052600080fdfea26469706673582212205b051beeba50475253abb0d341240d574744347abcf5bba0f1a934a30c4749f164736f6c634300080b0033",
+  "metadata": "{\"compiler\":{\"version\":\"0.8.11+commit.d7f03943\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"/D/Dickens/Programming/Blockchain/Projects/JOBS/BrnMeterverse/contracts/BrnMeterverseSale.sol\":\"BrnMeterverseSale\"},\"evmVersion\":\"byzantium\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"/D/Dickens/Programming/Blockchain/Projects/JOBS/BrnMeterverse/contracts/BrnMeterverseSale.sol\":{\"keccak256\":\"0x2600df79290226d0f8bf5a5686a23d724cfabc46ae474fe2f54d89642ced03b2\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://c25075f53eb88787f2915ab0e4f2f7eeb8e209d68dcb436590a7bffc283d0ab9\",\"dweb:/ipfs/QmTBXYnwhBAfyFkSGWi9m7NxXfGCzD5yn6hzs2EZQXMWrC\"]}},\"version\":1}",
+  "bytecode": "0x6080604052348015600f57600080fd5b50603f80601d6000396000f3fe6080604052600080fdfea26469706673582212208f48871c9d1c586ba69828b2a58b8b165f7f81c0b21cea3f02a1aaab46db898a64736f6c634300080b0033",
+  "deployedBytecode": "0x6080604052600080fdfea26469706673582212208f48871c9d1c586ba69828b2a58b8b165f7f81c0b21cea3f02a1aaab46db898a64736f6c634300080b0033",
   "immutableReferences": {},
   "generatedSources": [],
   "deployedGeneratedSources": [],
-  "sourceMap": "66:54:1:-:0;;;92:26;;;;;;;;;;66:54;;;;;;",
-  "deployedSourceMap": "66:54:1:-:0;;;;;",
-  "source": "// SPDX-License-Identifier: MIT\npragma solidity >=0.4.22 <0.9.0;\n\ncontract BRNTokenSale {\n  constructor() public {\n  }\n}\n",
-  "sourcePath": "D:/Dickens/Programming/Blockchain/Projects/JOBS/mrn-token/contracts/BRNTokenSale.sol",
+  "sourceMap": "66:59:1:-:0;;;97:26;;;;;;;;;;66:59;;;;;;",
+  "deployedSourceMap": "66:59:1:-:0;;;;;",
+  "source": "// SPDX-License-Identifier: MIT\npragma solidity >=0.4.22 <0.9.0;\n\ncontract BrnMeterverseSale {\n  constructor() public {\n  }\n}\n",
+  "sourcePath": "D:/Dickens/Programming/Blockchain/Projects/JOBS/BrnMeterverse/contracts/BrnMeterverseSale.sol",
   "ast": {
-    "absolutePath": "/D/Dickens/Programming/Blockchain/Projects/JOBS/mrn-token/contracts/BRNTokenSale.sol",
+    "absolutePath": "/D/Dickens/Programming/Blockchain/Projects/JOBS/BrnMeterverse/contracts/BrnMeterverseSale.sol",
     "exportedSymbols": {
-      "BRNTokenSale": [
+      "BrnMeterverseSale": [
         317
       ]
     },
@@ -45,7 +45,7 @@
       {
         "abstract": false,
         "baseContracts": [],
-        "canonicalName": "BRNTokenSale",
+        "canonicalName": "BrnMeterverseSale",
         "contractDependencies": [],
         "contractKind": "contract",
         "fullyImplemented": true,
@@ -53,15 +53,15 @@
         "linearizedBaseContracts": [
           317
         ],
-        "name": "BRNTokenSale",
-        "nameLocation": "75:12:1",
+        "name": "BrnMeterverseSale",
+        "nameLocation": "75:17:1",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
             "body": {
               "id": 315,
               "nodeType": "Block",
-              "src": "113:5:1",
+              "src": "118:5:1",
               "statements": []
             },
             "id": 316,
@@ -75,32 +75,32 @@
               "id": 313,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "103:2:1"
+              "src": "108:2:1"
             },
             "returnParameters": {
               "id": 314,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "113:0:1"
+              "src": "118:0:1"
             },
             "scope": 317,
-            "src": "92:26:1",
+            "src": "97:26:1",
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "public"
           }
         ],
         "scope": 318,
-        "src": "66:54:1",
+        "src": "66:59:1",
         "usedErrors": []
       }
     ],
-    "src": "32:89:1"
+    "src": "32:94:1"
   },
   "legacyAST": {
-    "absolutePath": "/D/Dickens/Programming/Blockchain/Projects/JOBS/mrn-token/contracts/BRNTokenSale.sol",
+    "absolutePath": "/D/Dickens/Programming/Blockchain/Projects/JOBS/BrnMeterverse/contracts/BrnMeterverseSale.sol",
     "exportedSymbols": {
-      "BRNTokenSale": [
+      "BrnMeterverseSale": [
         317
       ]
     },
@@ -125,7 +125,7 @@
       {
         "abstract": false,
         "baseContracts": [],
-        "canonicalName": "BRNTokenSale",
+        "canonicalName": "BrnMeterverseSale",
         "contractDependencies": [],
         "contractKind": "contract",
         "fullyImplemented": true,
@@ -133,15 +133,15 @@
         "linearizedBaseContracts": [
           317
         ],
-        "name": "BRNTokenSale",
-        "nameLocation": "75:12:1",
+        "name": "BrnMeterverseSale",
+        "nameLocation": "75:17:1",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
             "body": {
               "id": 315,
               "nodeType": "Block",
-              "src": "113:5:1",
+              "src": "118:5:1",
               "statements": []
             },
             "id": 316,
@@ -155,27 +155,27 @@
               "id": 313,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "103:2:1"
+              "src": "108:2:1"
             },
             "returnParameters": {
               "id": 314,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "113:0:1"
+              "src": "118:0:1"
             },
             "scope": 317,
-            "src": "92:26:1",
+            "src": "97:26:1",
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "public"
           }
         ],
         "scope": 318,
-        "src": "66:54:1",
+        "src": "66:59:1",
         "usedErrors": []
       }
     ],
-    "src": "32:89:1"
+    "src": "32:94:1"
   },
   "compiler": {
     "name": "solc",
@@ -183,7 +183,7 @@
   },
   "networks": {},
   "schemaVersion": "3.4.1",
-  "updatedAt": "2022-01-27T18:46:27.816Z",
+  "updatedAt": "2022-01-27T20:49:27.937Z",
   "devdoc": {
     "kind": "dev",
     "methods": {},
