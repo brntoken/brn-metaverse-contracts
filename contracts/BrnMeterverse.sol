@@ -190,6 +190,8 @@ contract BrnMeterverse is Ownable, IBEP2E {
    * @return bool true if success otherwise false
    */
   function decreaseAllowance(address _spender, uint _subtractedValue) public whenNotPaused returns (bool) {
+    uint currentAllowance = allowances[msg.sender][_spender];
+    require(currentAllowance >= _subtractedValue,"BEP2E: Insufficient Allowance");
     _approve(msg.sender, _spender, allowances[msg.sender][_spender].sub(_subtractedValue, "BEP2E: decreased allowance below zero"));
     return true;
   }
@@ -302,6 +304,9 @@ contract BrnMeterverse is Ownable, IBEP2E {
     require(_account != address(0), "BEP2E: burn from the zero address");
 
     _beforeTokenTransfer(_account, address(0), _amount);
+
+    uint accountBalance = balances[_account];
+    require(accountBalance >= _amount,"BEP2E: burn amount exceeds balance");
 
     balances[_account] = balances[_account].sub(_amount, "BEP2E: burn amount exceeds balance");
     _totalSupply = _totalSupply.sub(_amount);
