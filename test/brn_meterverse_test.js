@@ -65,6 +65,24 @@ contract('BrnMeterverse',(accounts) =>{
             assert(result.logs[0].args.spender, alice, "Spender Address is captured correcty");
             assert(result.logs[0].args.value, allowanceToBeAdded);
         });
+
+        it("can enable a BRN holder to descrease the allowance issued to another address to be spent on their behalf", async () => {
+            const allowanceToBeReduced = 2000;
+            const currentOwnerAllowanceToAlice = await brnMeterverse.allowance(owner, alice);
+
+            console.log("Current Allowance", currentOwnerAllowanceToAlice.toNumber());
+            const result = await brnMeterverse.decreaseAllowance(alice, allowanceToBeReduced, { from: owner });
+            const newAllowance = currentOwnerAllowanceToAlice.toNumber() - allowanceToBeReduced;
+
+            const allowanceBalance = await brnMeterverse.allowance(owner, alice);
+
+            assert(result.receipt.status, true);
+            assert.equal(newAllowance, 1000, "BRN allowance to spender successfully deacreased by BRN holder");
+            //test Approval event
+            assert(result.logs[0].args.owner, owner, "Approving address is captured correctly");
+            assert(result.logs[0].args.spender, alice, "Spender Address is captured correcty");
+            assert(result.logs[0].args.value, allowanceToBeReduced);
+        });
     });
 
 
