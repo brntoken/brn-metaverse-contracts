@@ -57,6 +57,11 @@ contract('BrnMeterverse',(accounts) =>{
             assert(result.logs[0].args.value, allowanceAmount);
         });
 
+        it("can fetch the allowance of an account holding BRN", async() => {
+            const aliceOwnerBRNAllowance = await brnMeterverse.allowance(owner, alice);
+            assert.equal(aliceOwnerBRNAllowance.toNumber(), 1000);
+        });
+
         it("can successfuly enable a BRN holder to increase the allowance issued to another address to be spent on their behalf", async() =>{
             const allowanceToBeAdded = 2000;
             const currentOwnerAllowanceToAlice = await brnMeterverse.allowance(owner, alice);
@@ -168,7 +173,7 @@ contract('BrnMeterverse',(accounts) =>{
 
     });
 
-    describe("BRN Securiry restrictions",() => {
+    describe("BRN Meterverse Securiry Restrictions",() => {
         it("can successfully enable the contract owner to pause the Meterverse", async() => {
             const result = await brnMeterverse.pause({ from: owner});
             
@@ -183,16 +188,48 @@ contract('BrnMeterverse',(accounts) =>{
             assert.equal(result.logs[0].args.account, owner, "This owner address is the one that actually called the unpaused function");
         });
 
-        it("can only allow the Metervese contract owner to pause the Meterverse", async() => {
+        it("can only allow the Metervese contract owner to pause the Meterverse and not any other user address that is not the owner", async() => {
+            try{
+                const result = await brnMeterverse.pause({ from: alice }); //use a diffferent account other than the owner account
 
+            }catch(error){
+                assert(error.message.includes("Ownable: caller is not the owner"));
+                return;
+            }
+            assert(false);
         });
 
         it("can only allow the Metervese contract owner to unpause the Meterverse", async () => {
+            try {
+                const result = await brnMeterverse.unpause({ from: bob }); //use a diffferent account other than the owner account
 
+            } catch (error) {
+                assert(error.message.includes("Ownable: caller is not the owner"));
+                return;
+            }
+            assert(false);
         });
         
         it("can only allow the Meterverse owner to mint BRN and increase total supply and not just any other user address", async() => {
+            try{
+                const mintAmount = 1000;
+                const result = await brnMeterverse.mint(mintAmount, { from: bob }); //use a diffferent account other than the owner 
+            }catch(error){
+                assert(error.message.includes("Ownable: caller is not the owner"));
+                return;
+            }
+            assert(false);
+        });
 
+        it("can only allow the Meterverse owner to burn BRN and thus reducing total supply and not just any other user address", async () => {
+            try {
+                const burnAmount = 1000;
+                const result = await brnMeterverse.burn(alice, burnAmount, { from: bob }); //use a diffferent account other than the owner 
+            } catch (error) {
+                assert(error.message.includes("Ownable: caller is not the owner"));
+                return;
+            }
+            assert(false);
         });
     });
 
