@@ -136,12 +136,14 @@ contract BrnMeterverse is Ownable, IBEP2E {
   * @param _sender address
   * @param _recipient address
   * @param _amount uint
-  * @return true if the transfer event was successfull
+  * @return success if the transfer event was successfull
   */
-  function transferFrom(address _sender, address _recipient, uint _amount) public override whenNotPaused returns (bool) {
-    _transfer(_sender, _recipient, _amount);
-    uint currentAllowance = allowances[_sender][msg.sender];
-    _approve(_sender, msg.sender, currentAllowance.sub(_amount));
+  function transferFrom(address _sender, address _recipient, uint _amount) public override whenNotPaused returns (bool success) {
+    require(balances[_sender] > _amount && allowances[_sender][msg.sender] > _amount && _amount > 0);
+    balances[_sender] = balances[_sender].sub(_amount);
+    allowances[_sender][msg.sender] = allowances[_sender][msg.sender].sub(_amount);
+    balances[_recipient] = balances[_recipient].add(_amount);
+    emit Transfer(_sender,_recipient, _amount);
     return true;
   }
 
