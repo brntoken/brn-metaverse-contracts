@@ -21,27 +21,27 @@
     "absolutePath": "/D/Dickens/Programming/Blockchain/Projects/JOBS/BrnMeterverse/contracts/BrnMeterverseSale.sol",
     "exportedSymbols": {
       "Address": [
-        1776
+        1817
       ],
       "BrnMeterversePreSale": [
-        783
+        824
       ],
       "IERC20": [
-        1140
+        1181
       ],
       "SafeERC20": [
-        1364
+        1405
       ],
       "TokenTimelock": [
-        1479
+        1520
       ]
     },
-    "id": 784,
+    "id": 825,
     "license": "MIT",
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 777,
+        "id": 818,
         "literals": [
           "solidity",
           "^",
@@ -54,11 +54,11 @@
       {
         "absolutePath": "@openzeppelin/contracts/token/ERC20/utils/TokenTimeLock.sol",
         "file": "@openzeppelin/contracts/token/ERC20/utils/TokenTimeLock.sol",
-        "id": 778,
+        "id": 819,
         "nameLocation": "-1:-1:-1",
         "nodeType": "ImportDirective",
-        "scope": 784,
-        "sourceUnit": 1480,
+        "scope": 825,
+        "sourceUnit": 1521,
         "src": "56:69:1",
         "symbolAliases": [],
         "unitAlias": ""
@@ -70,9 +70,9 @@
         "contractDependencies": [],
         "contractKind": "contract",
         "fullyImplemented": true,
-        "id": 783,
+        "id": 824,
         "linearizedBaseContracts": [
-          783
+          824
         ],
         "name": "BrnMeterversePreSale",
         "nameLocation": "137:20:1",
@@ -80,12 +80,12 @@
         "nodes": [
           {
             "body": {
-              "id": 781,
+              "id": 822,
               "nodeType": "Block",
               "src": "183:5:1",
               "statements": []
             },
-            "id": 782,
+            "id": 823,
             "implemented": true,
             "kind": "constructor",
             "modifiers": [],
@@ -93,25 +93,25 @@
             "nameLocation": "-1:-1:-1",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 779,
+              "id": 820,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "173:2:1"
             },
             "returnParameters": {
-              "id": 780,
+              "id": 821,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "183:0:1"
             },
-            "scope": 783,
+            "scope": 824,
             "src": "162:26:1",
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "public"
           }
         ],
-        "scope": 784,
+        "scope": 825,
         "src": "128:62:1",
         "usedErrors": []
       }
@@ -122,27 +122,27 @@
     "absolutePath": "/D/Dickens/Programming/Blockchain/Projects/JOBS/BrnMeterverse/contracts/BrnMeterverseSale.sol",
     "exportedSymbols": {
       "Address": [
-        1776
+        1817
       ],
       "BrnMeterversePreSale": [
-        783
+        824
       ],
       "IERC20": [
-        1140
+        1181
       ],
       "SafeERC20": [
-        1364
+        1405
       ],
       "TokenTimelock": [
-        1479
+        1520
       ]
     },
-    "id": 784,
+    "id": 825,
     "license": "MIT",
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 777,
+        "id": 818,
         "literals": [
           "solidity",
           "^",
@@ -155,11 +155,11 @@
       {
         "absolutePath": "@openzeppelin/contracts/token/ERC20/utils/TokenTimeLock.sol",
         "file": "@openzeppelin/contracts/token/ERC20/utils/TokenTimeLock.sol",
-        "id": 778,
+        "id": 819,
         "nameLocation": "-1:-1:-1",
         "nodeType": "ImportDirective",
-        "scope": 784,
-        "sourceUnit": 1480,
+        "scope": 825,
+        "sourceUnit": 1521,
         "src": "56:69:1",
         "symbolAliases": [],
         "unitAlias": ""
@@ -171,9 +171,9 @@
         "contractDependencies": [],
         "contractKind": "contract",
         "fullyImplemented": true,
-        "id": 783,
+        "id": 824,
         "linearizedBaseContracts": [
-          783
+          824
         ],
         "name": "BrnMeterversePreSale",
         "nameLocation": "137:20:1",
@@ -181,12 +181,12 @@
         "nodes": [
           {
             "body": {
-              "id": 781,
+              "id": 822,
               "nodeType": "Block",
               "src": "183:5:1",
               "statements": []
             },
-            "id": 782,
+            "id": 823,
             "implemented": true,
             "kind": "constructor",
             "modifiers": [],
@@ -194,25 +194,25 @@
             "nameLocation": "-1:-1:-1",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 779,
+              "id": 820,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "173:2:1"
             },
             "returnParameters": {
-              "id": 780,
+              "id": 821,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "183:0:1"
             },
-            "scope": 783,
+            "scope": 824,
             "src": "162:26:1",
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "public"
           }
         ],
-        "scope": 784,
+        "scope": 825,
         "src": "128:62:1",
         "usedErrors": []
       }
@@ -225,7 +225,7 @@
   },
   "networks": {},
   "schemaVersion": "3.4.1",
-  "updatedAt": "2022-01-29T08:54:41.622Z",
+  "updatedAt": "2022-01-29T22:43:55.082Z",
   "devdoc": {
     "kind": "dev",
     "methods": {},
