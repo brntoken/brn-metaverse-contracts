@@ -1,0 +1,239 @@
+{
+  "contractName": "BrnMeterversePreSale",
+  "abi": [
+    {
+      "inputs": [],
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    }
+  ],
+  "metadata": "{\"compiler\":{\"version\":\"0.8.11+commit.d7f03943\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"/D/Dickens/Programming/Blockchain/Projects/JOBS/BrnMeterverse/contracts/BrnMeterverseSale.sol\":\"BrnMeterversePreSale\"},\"evmVersion\":\"byzantium\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"/D/Dickens/Programming/Blockchain/Projects/JOBS/BrnMeterverse/contracts/BrnMeterverseSale.sol\":{\"keccak256\":\"0x3e621fcfad1338f4b5559e8ea0ce219a7934253c625c4adde798b4fdc0e7ffe0\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://5a76e0001dac415311323e83660dac263e79462cdeaf796276d30af32ab47805\",\"dweb:/ipfs/QmNxKUPdHLxpNRxEwddaPRbXevFHrAmtjyfsZCjsu5yK2w\"]},\"@openzeppelin/contracts/token/ERC20/IERC20.sol\":{\"keccak256\":\"0x61437cb513a887a1bbad006e7b1c8b414478427d33de47c5600af3c748f108da\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://2c3d0973630ed74f2b5ce3944677a885dc70ec32fc83b35f55045a10224da32b\",\"dweb:/ipfs/QmbefZ5RoEZKNHXCALfh683PnaNYzKPcKMFjyY1DVAgq8A\"]},\"@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol\":{\"keccak256\":\"0xc3d946432c0ddbb1f846a0d3985be71299df331b91d06732152117f62f0be2b5\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://4632c341a06ba5c079b51ca5a915efab4e6ab57735b37839b3e8365ff806a43e\",\"dweb:/ipfs/QmTHT3xHYed2wajEoA5qu7ii2BxLpPhQZHwAhtLK5Z7ANK\"]},\"@openzeppelin/contracts/token/ERC20/utils/TokenTimeLock.sol\":{\"keccak256\":\"0x965d462ca9729af9715401eda8a725fa127132abec3c20b546ecd0c5aac1fc12\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://bb240dbdc39dff9012b7a8c75c1a4458627ca620ceae274a805ce16443a06382\",\"dweb:/ipfs/QmY7qfUL4D579MvRw8SjKSiAuAdjp96cNFDqTffYrziF6Q\"]},\"@openzeppelin/contracts/utils/Address.sol\":{\"keccak256\":\"0x51b758a8815ecc9596c66c37d56b1d33883a444631a3f916b9fe65cb863ef7c4\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://997ca03557985b3c6f9143a18b6c3a710b3bc1c7f189ee956d305a966ecfb922\",\"dweb:/ipfs/QmQaD3Wb62F88SHqmpLttvF6wKuPDQep2LLUcKPekeRzvz\"]}},\"version\":1}",
+  "bytecode": "0x6080604052348015600f57600080fd5b50603f80601d6000396000f3fe6080604052600080fdfea264697066735822122003fc1a70cd2b20035765eac74dcc9ff3f68c6633f96d84a5acf06278ed70526a64736f6c634300080b0033",
+  "deployedBytecode": "0x6080604052600080fdfea264697066735822122003fc1a70cd2b20035765eac74dcc9ff3f68c6633f96d84a5acf06278ed70526a64736f6c634300080b0033",
+  "immutableReferences": {},
+  "generatedSources": [],
+  "deployedGeneratedSources": [],
+  "sourceMap": "128:62:1:-:0;;;162:26;;;;;;;;;;128:62;;;;;;",
+  "deployedSourceMap": "128:62:1:-:0;;;;;",
+  "source": "// SPDX-License-Identifier: MIT\npragma solidity ^0.8.0;\nimport '@openzeppelin/contracts/token/ERC20/utils/TokenTimeLock.sol';\n\n\ncontract BrnMeterversePreSale {\n  constructor() public {\n  }\n}\n",
+  "sourcePath": "D:/Dickens/Programming/Blockchain/Projects/JOBS/BrnMeterverse/contracts/BrnMeterverseSale.sol",
+  "ast": {
+    "absolutePath": "/D/Dickens/Programming/Blockchain/Projects/JOBS/BrnMeterverse/contracts/BrnMeterverseSale.sol",
+    "exportedSymbols": {
+      "Address": [
+        1546
+      ],
+      "BrnMeterversePreSale": [
+        553
+      ],
+      "IERC20": [
+        910
+      ],
+      "SafeERC20": [
+        1134
+      ],
+      "TokenTimelock": [
+        1249
+      ]
+    },
+    "id": 554,
+    "license": "MIT",
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 547,
+        "literals": [
+          "solidity",
+          "^",
+          "0.8",
+          ".0"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "32:23:1"
+      },
+      {
+        "absolutePath": "@openzeppelin/contracts/token/ERC20/utils/TokenTimeLock.sol",
+        "file": "@openzeppelin/contracts/token/ERC20/utils/TokenTimeLock.sol",
+        "id": 548,
+        "nameLocation": "-1:-1:-1",
+        "nodeType": "ImportDirective",
+        "scope": 554,
+        "sourceUnit": 1250,
+        "src": "56:69:1",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "abstract": false,
+        "baseContracts": [],
+        "canonicalName": "BrnMeterversePreSale",
+        "contractDependencies": [],
+        "contractKind": "contract",
+        "fullyImplemented": true,
+        "id": 553,
+        "linearizedBaseContracts": [
+          553
+        ],
+        "name": "BrnMeterversePreSale",
+        "nameLocation": "137:20:1",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "body": {
+              "id": 551,
+              "nodeType": "Block",
+              "src": "183:5:1",
+              "statements": []
+            },
+            "id": 552,
+            "implemented": true,
+            "kind": "constructor",
+            "modifiers": [],
+            "name": "",
+            "nameLocation": "-1:-1:-1",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 549,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "173:2:1"
+            },
+            "returnParameters": {
+              "id": 550,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "183:0:1"
+            },
+            "scope": 553,
+            "src": "162:26:1",
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "public"
+          }
+        ],
+        "scope": 554,
+        "src": "128:62:1",
+        "usedErrors": []
+      }
+    ],
+    "src": "32:159:1"
+  },
+  "legacyAST": {
+    "absolutePath": "/D/Dickens/Programming/Blockchain/Projects/JOBS/BrnMeterverse/contracts/BrnMeterverseSale.sol",
+    "exportedSymbols": {
+      "Address": [
+        1546
+      ],
+      "BrnMeterversePreSale": [
+        553
+      ],
+      "IERC20": [
+        910
+      ],
+      "SafeERC20": [
+        1134
+      ],
+      "TokenTimelock": [
+        1249
+      ]
+    },
+    "id": 554,
+    "license": "MIT",
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 547,
+        "literals": [
+          "solidity",
+          "^",
+          "0.8",
+          ".0"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "32:23:1"
+      },
+      {
+        "absolutePath": "@openzeppelin/contracts/token/ERC20/utils/TokenTimeLock.sol",
+        "file": "@openzeppelin/contracts/token/ERC20/utils/TokenTimeLock.sol",
+        "id": 548,
+        "nameLocation": "-1:-1:-1",
+        "nodeType": "ImportDirective",
+        "scope": 554,
+        "sourceUnit": 1250,
+        "src": "56:69:1",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "abstract": false,
+        "baseContracts": [],
+        "canonicalName": "BrnMeterversePreSale",
+        "contractDependencies": [],
+        "contractKind": "contract",
+        "fullyImplemented": true,
+        "id": 553,
+        "linearizedBaseContracts": [
+          553
+        ],
+        "name": "BrnMeterversePreSale",
+        "nameLocation": "137:20:1",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "body": {
+              "id": 551,
+              "nodeType": "Block",
+              "src": "183:5:1",
+              "statements": []
+            },
+            "id": 552,
+            "implemented": true,
+            "kind": "constructor",
+            "modifiers": [],
+            "name": "",
+            "nameLocation": "-1:-1:-1",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 549,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "173:2:1"
+            },
+            "returnParameters": {
+              "id": 550,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "183:0:1"
+            },
+            "scope": 553,
+            "src": "162:26:1",
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "public"
+          }
+        ],
+        "scope": 554,
+        "src": "128:62:1",
+        "usedErrors": []
+      }
+    ],
+    "src": "32:159:1"
+  },
+  "compiler": {
+    "name": "solc",
+    "version": "0.8.11+commit.d7f03943.Emscripten.clang"
+  },
+  "networks": {},
+  "schemaVersion": "3.4.1",
+  "updatedAt": "2022-01-29T00:14:25.251Z",
+  "devdoc": {
+    "kind": "dev",
+    "methods": {},
+    "version": 1
+  },
+  "userdoc": {
+    "kind": "user",
+    "methods": {},
+    "version": 1
+  }
+}
