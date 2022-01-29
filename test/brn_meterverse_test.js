@@ -28,6 +28,9 @@ contract('BrnMeterverse',(accounts) =>{
             assert(result.receipt.status, true);
             assert.equal(aliceBalance, 10,"Meterverse is deposited successfully into other wallet address");
             assert(initialOwnerBalance < newOwnerBalance,"Owner balance reduces upon sending some meterverse tokens to another address");
+            assert(result.logs[0].args.from, owner,"Sender addres is captured correctly");
+            assert(result.logs[0].args.to, alice,"Receiver Address captured correcty");
+            assert(result.logs[0].args.value, 10,"BRN amount transfered captured correctly");
         });
     });
 
