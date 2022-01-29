@@ -5,10 +5,11 @@ pragma abicoder v2;
 import '@openzeppelin/contracts/access/Ownable.sol';
 import '@openzeppelin/contracts/utils/math/SafeMath.sol';
 import '@openzeppelin/contracts/security/ReentrancyGuard.sol';
+import '@openzeppelin/contracts/security/Pausable.sol';
 import './interfaces/IBEP2E.sol';
 
 //TODO - Inherit from ReentrancyGuard
-contract BrnMeterverse is Ownable, IBEP2E  {
+contract BrnMeterverse is Ownable, IBEP2E , Pausable {
   using SafeMath for uint256;
 
   string public _name; //token name
@@ -87,7 +88,7 @@ contract BrnMeterverse is Ownable, IBEP2E  {
   * @param _amount uint the amount of tokens to be sent to the specied address as the recepient
   * @return bool success if the transfer was successfull otherwise false
   */
-  function transfer(address _recipient, uint _amount) public override returns (bool){ //nonReentrant
+  function transfer(address _recipient, uint _amount) public override whenNotPaused returns (bool){ //nonReentrant
       _transfer(msg.sender, _recipient, _amount);
       return true;
   }
@@ -103,7 +104,7 @@ contract BrnMeterverse is Ownable, IBEP2E  {
   * @param _amount uint
   * @return true if the transfer event was successfull
   */
-  function transferFrom(address _sender, address _recipient, uint _amount) public override returns (bool) {
+  function transferFrom(address _sender, address _recipient, uint _amount) public override whenNotPaused returns (bool) {
     _transfer(_sender, _recipient, _amount);
     _approve(_sender, _msgSender(), allowances[_sender][msg.sender].sub(_amount, "BEP2E: transfer amount exceeds allowance"));
     return true;
@@ -128,7 +129,7 @@ contract BrnMeterverse is Ownable, IBEP2E  {
   * @param _amount uint , the amount to approved by the token holder
   * @return bool true if success otherwise false
   */
-  function approve(address _spender, uint _amount) public override returns (bool) {
+  function approve(address _spender, uint _amount) public override whenNotPaused returns (bool) {
     _approve(msg.sender, _spender, _amount);
     return true;
   }
@@ -143,7 +144,7 @@ contract BrnMeterverse is Ownable, IBEP2E  {
    * @param _addedValue uint 
    * @return bool true if success otherwise false
    */
-  function increaseAllowance(address _spender, uint _addedValue) public returns (bool) {
+  function increaseAllowance(address _spender, uint _addedValue) public whenNotPaused returns (bool) {
     _approve(msg.sender, _spender, allowances[msg.sender][_spender].add(_addedValue));
     return true;
   }
@@ -154,7 +155,7 @@ contract BrnMeterverse is Ownable, IBEP2E  {
    * @param _subtractedValue uint
    * @return bool true if success otherwise false
    */
-  function decreaseAllowance(address _spender, uint _subtractedValue) public returns (bool) {
+  function decreaseAllowance(address _spender, uint _subtractedValue) public whenNotPaused returns (bool) {
     _approve(msg.sender, _spender, allowances[msg.sender][_spender].sub(_subtractedValue, "BEP2E: decreased allowance below zero"));
     return true;
   }
@@ -165,7 +166,7 @@ contract BrnMeterverse is Ownable, IBEP2E  {
    * @param _amount uint 
    * @return bool if success othwerise false
    */
-  function mint(uint _amount) public onlyOwner returns (bool) {
+  function mint(uint _amount) public onlyOwner whenNotPaused returns (bool) {
     _mint(msg.sender, _amount);
     return true;
   }
@@ -179,7 +180,7 @@ contract BrnMeterverse is Ownable, IBEP2E  {
    * @param _amount uint
    * @return bool true if success otherwise false
    */
-  function burn(address _account, uint _amount) public onlyOwner returns(bool){
+  function burn(address _account, uint _amount) public onlyOwner whenNotPaused returns(bool){
     _burn(_account, _amount);
     return true;
   }
