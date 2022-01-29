@@ -226,7 +226,7 @@ contract BrnMeterverse is Ownable, IBEP2E {
   *
   * - The contract must not be paused.
   */
-  function pause() internal onlyOwner whenNotPaused {
+  function pause() public onlyOwner whenNotPaused {
     _paused = true;
     emit Paused(msg.sender);
   }
@@ -238,7 +238,7 @@ contract BrnMeterverse is Ownable, IBEP2E {
   *
   * - The contract must be paused.
   */
-  function unpause() internal onlyOwner whenPaused {
+  function unpause() public onlyOwner whenPaused {
     _paused = false;
     emit Unpaused(msg.sender);
   }
