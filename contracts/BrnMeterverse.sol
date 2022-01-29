@@ -23,7 +23,7 @@ contract BrnMeterverse is Ownable, IBEP2E {
   event Paused(address account); //Emitted when the pause is lifted by `account`.
 
   constructor() public {
-    _name = "Brn Metaverse";
+    _name = "Brn Meterverse"; 
     _symbol = "BRN";
     _decimals = 18;
     _totalSupply = 1000000000;

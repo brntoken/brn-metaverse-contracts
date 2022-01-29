@@ -1,12 +1,21 @@
 const BrnMeterverse = artifacts.require('BrnMeterverse');
 const web3 = require('web3');
+const assert = require('assert');
 
 contract('BrnMeterverse',(accounts) =>{
     let brnMeterverse;
+    let name;
+    let symbol;
+    let decimals;
+    let totalSupply;
 
     beforeEach(async() => {
         brnMeterverse = await BrnMeterverse.deployed();
         [owner, alice, bob, inverster1, inverster2] = accounts;
+        name = "Brn Meterverse";
+        symbol = "BRN";
+        decimals = 18;
+        totalSupply = 1000000000;
     });
 
     describe("Meterverse Deployment", () => {
@@ -19,7 +28,6 @@ contract('BrnMeterverse',(accounts) =>{
         it("can successfuly enable BRN transfers from one address to another", async() => {
             const amount = 1000000;
             const initialOwnerBalance = await brnMeterverse.balanceOf(owner);
-            console.log("Initial Owner Balance",initialOwnerBalance.toNumber());
             const result = await brnMeterverse.transfer(alice, amount, { from: owner });
 
             const aliceBalance = await brnMeterverse.balanceOf(alice);
@@ -115,7 +123,6 @@ contract('BrnMeterverse',(accounts) =>{
 
             const newCalculatedBRNTotalSupply = newBRNTotalSupplyAfterBurn.toNumber() - amountToBurn;
 
-            console.log("New Total Supply", newCalculatedBRNTotalSupply);
             const newCalculatedOwnerBRNBalance = newOwnerBRNBalanceAfterBurn.toNumber() - amountToBurn;
 
 
@@ -125,37 +132,65 @@ contract('BrnMeterverse',(accounts) =>{
             assert(newCalculatedOwnerBRNBalance < currentOwnerBRNBalance.toNumber(),"BRN account owner balance successfully reduces after a burn from this account" );
         });
 
-        it("can successfully enable the contract owner to pause the Meterverse", async() => {
-
-        });
-
-        it("cane successfully enable the contract owner to unpause the Meterverse", async() => {
-
-        });
-
         it("can successfully fetch BRN total supply", async() => {
+            const BRNMeterverse = await BrnMeterverse.new();
+            const BRNTotalSupply = await BRNMeterverse.totalSupply();
 
+            assert.equal(BRNTotalSupply, totalSupply,"Successfully displays BRN Meterverse total token supply");
         });
 
         it("can successfully fetch BRN name", async() => {
-
+            const BRNName = await brnMeterverse.name();
+            assert.equal(BRNName, name,"Successfully displays Meterverse name");
         });
 
         it("can successfully fetch BRN symbol", async () => {
-
+            const BRNSymbol = await brnMeterverse.symbol();
+            assert.equal(BRNSymbol, symbol,"Successfully displays Meterverse symbol");
         });
 
         it("can successfully fetch the balance of a BRN holder", async() => {
+            const BRNMeterverse = await BrnMeterverse.new();
+            const ownerBalance = await BRNMeterverse.balanceOf(owner);
+            
+            assert(ownerBalance.toNumber(), 1000000000,"Successfully displays BRN holder balance");
+        });
 
+        it("can successfully fetch the address of the owner of the Metervse used in deployment", async() => {
+            const BRNOwnerAddress = await brnMeterverse.getOwner();
+            assert(BRNOwnerAddress, owner,"Successfully display BRN owner address used in deployment");
+        });
+
+        it("can successfully fetch the total number of decimals of the BRN Meterverse token", async() => {
+            const BRNDecimals = await brnMeterverse.decimals();
+            assert.equal(BRNDecimals, decimals,"Successfully display the total number of decimals for the BRN Meterverse token");
         });
 
     });
 
-    describe("BRN Securiry restrctions",() => {
-        it("can only allow the Metervese contract owner to pause Meterverse", async() => {
+    describe("BRN Securiry restrictions",() => {
+        it("can successfully enable the contract owner to pause the Meterverse", async() => {
+            const result = await brnMeterverse.pause({ from: owner});
+            
+            assert(result.receipt.status, true,"Meterverse Paused Successfully");
+            assert.equal(result.logs[0].args.account, owner,"This owner address is the one that actually called the pause function");
+        });
+
+        it("cane successfully enable the contract owner to unpause the Meterverse", async() => {
+            const result = await brnMeterverse.unpause({ from: owner });
+
+            assert(result.receipt.status, true, "Meterverse Unpaused Successfully");
+            assert.equal(result.logs[0].args.account, owner, "This owner address is the one that actually called the unpaused function");
+        });
+
+        it("can only allow the Metervese contract owner to pause the Meterverse", async() => {
 
         });
 
+        it("can only allow the Metervese contract owner to unpause the Meterverse", async () => {
+
+        });
+        
         it("can only allow the Meterverse owner to mint BRN and increase total supply and not just any other user address", async() => {
 
         });
