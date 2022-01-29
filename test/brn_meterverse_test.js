@@ -17,7 +17,7 @@ contract('BrnMeterverse',(accounts) =>{
 
     describe("BRN Meterverse Transfers", () => {
         it("can successfuly enable BRN transfers from one address to another", async() => {
-            const amount = 10;
+            const amount = 1000000;
             const initialOwnerBalance = await brnMeterverse.balanceOf(owner);
             console.log("Initial Owner Balance",initialOwnerBalance.toNumber());
             const result = await brnMeterverse.transfer(alice, amount, { from: owner });
@@ -26,11 +26,11 @@ contract('BrnMeterverse',(accounts) =>{
             const newOwnerBalance = await brnMeterverse.balanceOf(owner);
 
             assert(result.receipt.status, true);
-            assert.equal(aliceBalance, 10,"Meterverse is deposited successfully into other wallet address");
+            assert.equal(aliceBalance, 1000000,"Meterverse is deposited successfully into other wallet address");
             assert(initialOwnerBalance < newOwnerBalance,"Owner balance reduces upon sending some meterverse tokens to another address");
             assert(result.logs[0].args.from, owner,"Sender addres is captured correctly");
             assert(result.logs[0].args.to, alice,"Receiver Address is captured correcty");
-            assert(result.logs[0].args.value, 10,"BRN amount transfered captured correctly");
+            assert(result.logs[0].args.value, 1000000,"BRN amount transfered captured correctly");
         });
 
         it("can successfuly enable a BRN holder to approve allowance to another address", async() => {
@@ -104,14 +104,32 @@ contract('BrnMeterverse',(accounts) =>{
         });
 
         it("can successfully enable the contract owner to burn some amount of BRN to reduce BRN total supply", async() => {
+            const amountToBurn = 1000000;
+            const currentBRNTotalSupply = await brnMeterverse.totalSupply();
+            const currentOwnerBRNBalance = await brnMeterverse.balanceOf(owner);
+
+            const result = await brnMeterverse.burn(owner, amountToBurn, { from: owner } );
+
+            const newBRNTotalSupplyAfterBurn = await brnMeterverse.totalSupply();
+            const newOwnerBRNBalanceAfterBurn = await brnMeterverse.balanceOf(owner);
+
+            const newCalculatedBRNTotalSupply = newBRNTotalSupplyAfterBurn.toNumber() - amountToBurn;
+
+            console.log("New Total Supply", newCalculatedBRNTotalSupply);
+            const newCalculatedOwnerBRNBalance = newOwnerBRNBalanceAfterBurn.toNumber() - amountToBurn;
+
+
+            assert(result.receipt.status, true);
+            assert(currentBRNTotalSupply != newBRNTotalSupplyAfterBurn,"BRN total supply successfully reduces after a burn is triggered by Meterverse owner");
+            assert(newCalculatedBRNTotalSupply < currentBRNTotalSupply, "BRN total supply successfully reduces after a burn");
+            assert(newCalculatedOwnerBRNBalance < currentOwnerBRNBalance.toNumber(),"BRN account owner balance successfully reduces after a burn from this account" );
+        });
+
+        it("can successfully enable the contract owner to pause the Meterverse", async() => {
 
         });
 
-        it("can successfully enable the contract owner to pause the BRNMeterverse token", async() => {
-
-        });
-
-        it("cane successfully enable the contract owner to unpause the BRNMeterverse token", async() => {
+        it("cane successfully enable the contract owner to unpause the Meterverse", async() => {
 
         });
 
