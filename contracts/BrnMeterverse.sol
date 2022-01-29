@@ -140,7 +140,8 @@ contract BrnMeterverse is Ownable, IBEP2E {
   */
   function transferFrom(address _sender, address _recipient, uint _amount) public override whenNotPaused returns (bool) {
     _transfer(_sender, _recipient, _amount);
-    _approve(_sender, msg.sender, allowances[_sender][msg.sender].sub(_amount, "BEP2E: transfer amount exceeds allowance"));
+    uint currentAllowance = allowances[_sender][msg.sender];
+    _approve(_sender, msg.sender, currentAllowance.sub(_amount));
     return true;
   }
 
@@ -192,7 +193,7 @@ contract BrnMeterverse is Ownable, IBEP2E {
   function decreaseAllowance(address _spender, uint _subtractedValue) public whenNotPaused returns (bool) {
     uint currentAllowance = allowances[msg.sender][_spender];
     require(currentAllowance >= _subtractedValue,"BEP2E: Insufficient Allowance");
-    _approve(msg.sender, _spender, allowances[msg.sender][_spender].sub(_subtractedValue, "BEP2E: decreased allowance below zero"));
+    _approve(msg.sender, _spender, allowances[msg.sender][_spender].sub(_subtractedValue));
     return true;
   }
 
@@ -269,7 +270,7 @@ contract BrnMeterverse is Ownable, IBEP2E {
 
     require(senderBalance >= _amount, "BEP2E: transfer amount exceeds balance");
 
-    balances[_sender] = balances[_sender].sub(_amount, "BEP2E: transfer amount exceeds balance");
+    balances[_sender] = balances[_sender].sub(_amount);
     balances[_recipient] = balances[_recipient].add(_amount);
     emit Transfer(_sender, _recipient, _amount);
     _afterTokenTransfer(_sender, _recipient, _amount);
@@ -308,7 +309,7 @@ contract BrnMeterverse is Ownable, IBEP2E {
     uint accountBalance = balances[_account];
     require(accountBalance >= _amount,"BEP2E: burn amount exceeds balance");
 
-    balances[_account] = balances[_account].sub(_amount, "BEP2E: burn amount exceeds balance");
+    balances[_account] = balances[_account].sub(_amount);
     _totalSupply = _totalSupply.sub(_amount);
     emit Transfer(_account, address(0), _amount);
     _afterTokenTransfer(_account, address(0), _amount);
@@ -338,7 +339,7 @@ contract BrnMeterverse is Ownable, IBEP2E {
    */
   function _burnFrom(address _account, uint _amount) internal virtual {
     _burn(_account, _amount);
-    _approve(_account, msg.sender, allowances[_account][msg.sender].sub(_amount, "BEP2E: burn amount exceeds allowance"));
+    _approve(_account, msg.sender, allowances[_account][msg.sender].sub(_amount));
   }
 
   /**
