@@ -102,7 +102,45 @@ contract('BrnMeterverse',(accounts) =>{
             assert.equal(newSupply, newTotalSupply,"BRN total Supply increased successfully after mint is triggered by contract owner");
             assert.equal(totalOwnerBalanceAfterMinting, newOwnerBalance.toNumber(),"BRN owner balance is increased after minting");
         });
+
+        it("can successfully enable the contract owner to burn some amount of BRN to reduce BRN total supply", async() => {
+
+        });
+
+        it("can successfully enable the contract owner to pause the BRNMeterverse token", async() => {
+
+        });
+
+        it("cane successfully enable the contract owner to unpause the BRNMeterverse token", async() => {
+
+        });
+
+        it("can successfully fetch BRN total supply", async() => {
+
+        });
+
+        it("can successfully fetch BRN name", async() => {
+
+        });
+
+        it("can successfully fetch BRN symbol", async () => {
+
+        });
+
+        it("can successfully fetch the balance of a BRN holder", async() => {
+
+        });
+
     });
 
+    describe("BRN Securiry restrctions",() => {
+        it("can only allow the Metervese contract owner to pause Meterverse", async() => {
+
+        });
+
+        it("can only allow the Meterverse owner to mint BRN and increase total supply and not just any other user address", async() => {
+
+        });
+    });
 
 });
