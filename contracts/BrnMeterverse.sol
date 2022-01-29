@@ -103,7 +103,7 @@ contract BrnMeterverse is Ownable, IBEP2E  {
   * @param _amount uint
   * @return true if the transfer event was successfull
   */
-  function transferFrom(address _sender, address _recipient, uint _amount) external returns (bool) {
+  function transferFrom(address _sender, address _recipient, uint _amount) public override returns (bool) {
     _transfer(_sender, _recipient, _amount);
     _approve(_sender, _msgSender(), allowances[_sender][msg.sender].sub(_amount, "BEP2E: transfer amount exceeds allowance"));
     return true;
@@ -116,7 +116,7 @@ contract BrnMeterverse is Ownable, IBEP2E  {
   * @param _spender address the spender address
   * @return uint, the amount approved for spending
   */
-  function allowance(address _owner, address _spender) public view returns (uint256) {
+  function allowance(address _owner, address _spender) public override view returns (uint256) {
     return allowances[_owner][_spender];
   }
 
@@ -128,7 +128,7 @@ contract BrnMeterverse is Ownable, IBEP2E  {
   * @param _amount uint , the amount to approved by the token holder
   * @return bool true if success otherwise false
   */
-  function approve(address _spender, uint _amount) public returns (bool) {
+  function approve(address _spender, uint _amount) public override returns (bool) {
     _approve(msg.sender, _spender, _amount);
     return true;
   }
