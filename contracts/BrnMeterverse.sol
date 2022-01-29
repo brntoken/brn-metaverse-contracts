@@ -171,6 +171,20 @@ contract BrnMeterverse is Ownable, IBEP2E  {
   }
 
   /**
+   * @dev Destroys amount tokens from account, reducing the
+   * total supply.
+   * @dev account cannot be the zero address.
+   * @dev account must have at least amount tokens.
+   * @param _account address
+   * @param _amount uint
+   * @return bool true if success otherwise false
+   */
+  function burn(address _account, uint _amount) public onlyOwner returns(bool){
+    _burn(_account, _amount);
+    return true;
+  }
+
+  /**
   * -- INTERNAL FUNCTIONS -- 
   */
 
