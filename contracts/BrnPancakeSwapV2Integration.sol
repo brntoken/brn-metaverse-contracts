@@ -4,11 +4,17 @@ pragma abicoder v2;
 
 import '@openzeppelin/contracts/access/Ownable.sol';
 
+/**
+* @notice Interacts with pancakeswap to create a new liquidity pool pair for BRN/WBNB
+*/
 interface PancakeSwapV2Factory{
     function createPair(address tokenA, address tokenB) external returns (address pair);
     function getPair(address tokenA, address tokenB) external view returns (address pair);
 }
 
+/**
+* @notice Interacts with pancakeswap to create a new liquidity pool for the BRN/WBNB pair created
+*/
 interface PancakeSwapV2Router{
     function addLiquidityETH(
     address token,
@@ -69,7 +75,7 @@ contract BrnPancakeSwapV2Integration is Ownable {
                 _amountTokenDesired, 
                 _amountTokenMin, 
                 _amountETHMin,
-                payable(msg.sender), //Address of LP Token recipient
+                payable(msg.sender), //Address of Liquidity Pool Token recipient
                 _deadline);
     }
 }
