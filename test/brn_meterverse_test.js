@@ -41,22 +41,6 @@ contract('BrnMeterverse',(accounts) =>{
             assert(result.logs[0].args.value, 1000000,"BRN amount transfered captured correctly");
         });
 
-        it("can successfuly enable BRN transfers from one address to another specifying the sender, recipient and amount", async() => {
-            const amount = 1000000;
-            const initialOwnerBalance = await brnMeterverse.balanceOf(owner);
-            const result = await brnMeterverse.transferFrom(owner, bob, amount, { from: owner });
-
-            const bobBalance = await brnMeterverse.balanceOf(bob);
-            const newOwnerBalance = await brnMeterverse.balanceOf(owner);
-
-            assert(result.receipt.status, true);
-            assert.equal(bobBalance, 1000000,"Meterverse is deposited successfully into other wallet address");
-            assert(initialOwnerBalance < newOwnerBalance,"Owner balance reduces upon sending some meterverse tokens to another address");
-            assert(result.logs[0].args.from, owner,"Sender addres is captured correctly");
-            assert(result.logs[0].args.to, bob,"Receiver Address is captured correcty");
-            assert(result.logs[0].args.value, 1000000,"BRN amount transfered captured correctly");
-        });
-
         it("can successfuly enable a BRN holder to approve allowance to another address", async() => {
             const allowanceAmount = 1000;
 
@@ -76,6 +60,22 @@ contract('BrnMeterverse',(accounts) =>{
         it("can fetch the allowance of an account holding BRN", async() => {
             const aliceOwnerBRNAllowance = await brnMeterverse.allowance(owner, alice);
             assert.equal(aliceOwnerBRNAllowance.toNumber(), 1000);
+        });
+
+        it("can successfuly enable BRN transfers from one address to another specifying the sender, recipient and amount", async() => {
+            const amount = 1000000;
+            const initialOwnerBalance = await brnMeterverse.balanceOf(owner);
+            const result = await brnMeterverse.transferFrom(owner, bob, amount, { from: owner });
+
+            const bobBalance = await brnMeterverse.balanceOf(bob);
+            const newOwnerBalance = await brnMeterverse.balanceOf(owner);
+
+            assert(result.receipt.status, true);
+            assert.equal(bobBalance, 1000000,"Meterverse is deposited successfully into other wallet address");
+            assert(initialOwnerBalance < newOwnerBalance,"Owner balance reduces upon sending some meterverse tokens to another address");
+            assert(result.logs[0].args.from, owner,"Sender addres is captured correctly");
+            assert(result.logs[0].args.to, bob,"Receiver Address is captured correcty");
+            assert(result.logs[0].args.value, 1000000,"BRN amount transfered captured correctly");
         });
 
         it("can successfuly enable a BRN holder to increase the allowance issued to another address to be spent on their behalf", async() =>{
