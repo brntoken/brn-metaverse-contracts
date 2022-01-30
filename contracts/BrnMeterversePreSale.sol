@@ -6,13 +6,15 @@ import '@openzeppelin/contracts/access/AccessControl.sol';
 import '@openzeppelin/contracts/finance/PaymentSplitter.sol';
 import '@openzeppelin/contracts/finance/VestingWallet.sol';
 import '@openzeppelin/contracts/utils/math/SafeMath.sol';
+import '@openzeppelin/contracts/security/Pausable.sol';
+import '@openzeppelin/contracts/security/PullPayment.sol';
 import './BrnMeterverse.sol';
 
 /**
 * @title BrnMeterversePreSale
 * @dev A contract that manages the BRN Meterverse Presale logic
 */
-contract BrnMeterversePreSale is Ownable {
+contract BrnMeterversePreSale is Ownable, Pausable {
   using SafeMath for uint256;
 
   //presale phases
