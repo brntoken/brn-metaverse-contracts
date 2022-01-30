@@ -63,6 +63,7 @@ contract BrnMeterversePreSale is Ownable, Pausable {
     staffFundAddress = _staffFundAddress;
     burnFundAddress = _burnFundAddress;
     holdersFundAddress = _holdersFundAddress;
+    //token = new BrnMeterverse();
   }
 
   /**
@@ -96,5 +97,24 @@ contract BrnMeterversePreSale is Ownable, Pausable {
       icoPhaseStakingPeriod = 30 days * 2; //the presale phase will run for 2 months
     }
     return true;
+  }
+
+  /**
+  * @dev enables a user to buy specied amount of token from the presale taking into consideration the cap and goal set
+  */
+  function buyToken() public payable{
+
+  }
+
+  receive() external payable {
+    buyToken();
+  }
+
+  /**
+  * @notice this is responsible for sending the tokens to the buyer while also sending ETH to the wallets
+  * only triggered by the contract owner once the ico phases are done
+  */
+  function finalize() public onlyOwner{
+
   }
 }
