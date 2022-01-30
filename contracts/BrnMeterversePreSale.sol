@@ -6,28 +6,7 @@ import '@openzeppelin/contracts/access/AccessControl.sol';
 import '@openzeppelin/contracts/finance/PaymentSplitter.sol';
 import '@openzeppelin/contracts/finance/VestingWallet.sol';
 import '@openzeppelin/contracts/utils/math/SafeMath.sol';
-
-/**
-* @notice through the address of BRN Meterverse, we can implement it's functions
-*/
-interface BRNMeterverseInterface{
-    function transfer(address to, uint amount) external returns(bool success);
-    function transferFrom(address from, address to, uint amount) external view returns(bool);
-    function balanceOf(address account) external view returns(uint);
-    function totalSupply() external view returns(uint);
-    function decimals() external view returns(uint);
-    function symbol() external view returns(string memory);
-    function name() external view returns(string memory);
-    function paused() external view returns (bool);
-    function allowance(address owner, address spender) external view returns (uint256);
-    function approve(address spender, uint amount) external returns (bool);
-    function increaseAllowance(address spender, uint addedValue) external returns (bool);
-    function decreaseAllowance(address spender, uint subtractedValue) external returns (bool);
-    function mint(uint amount) external returns (bool);
-    function burn(address account, uint amount) external returns(bool);
-    function pause() external;
-    function unpause() external;
-}
+import './BrnMeterverse.sol';
 
 /**
 * @title BrnMeterversePreSale
@@ -63,7 +42,11 @@ contract BrnMeterversePreSale is Ownable {
   uint internal icoPhaseAmount;
   uint internal icoPhaseStakingPeriod;
 
+  //track the BRN Meterverse
+  BrnMeterverse internal token;
+
   constructor(
+    BrnMeterverse _token,
     address _partnershipFundAddress,
     address _airdropFundAddress,
     address _marketingFundAddress ,
@@ -71,6 +54,7 @@ contract BrnMeterversePreSale is Ownable {
     address _burnFundAddress,
     address _holdersFundAddress 
   ) public {
+    token = _token;
     partnershipFundAddress = _partnershipFundAddress;
     airdropFundAddress = _airdropFundAddress;
     marketingFundAddress = _marketingFundAddress;
