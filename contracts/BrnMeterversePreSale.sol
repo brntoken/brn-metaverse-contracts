@@ -37,6 +37,11 @@ contract BrnMeterversePreSale is Ownable {
   address internal immutable burnFundAddress;
   address internal immutable holdersFundAddress;
 
+  //Token rate based on the ico presale phase
+  uint internal icoPhaseRate;
+  uint internal icoPhaseAmount;
+  uint internal icoPhaseStakingPeriod;
+
   constructor(
     address _partnershipFundAddress,
     address _airdropFundAddress,
