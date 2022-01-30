@@ -75,14 +75,17 @@ contract BrnMeterversePreSale is Ownable {
       uint phase1Rate = 10;
       icoPhaseRate = phase1Rate.div(100); //set pricerate to 0.1 for the first phase of the presale
       icoPhaseAmount = 7000000 * 10 ** 18; //set the token amount to 7000000 for the first phase of the presale
+      icoPhaseStakingPeriod = 30 days * 6; //the presale phase will run for 6 months
     }else if(icoPhase == ICOPresalePhase.Phase2 ){
       uint phase2Rate = 20;
       icoPhaseRate = phase2Rate.div(100); //set pricerate to 0.2 for the second phase of the presale
       icoPhaseAmount = 18000000 * 10 ** 18; //set the token amount to 18000000 for the second phase of the presale
+      icoPhaseStakingPeriod = 30 days * 4; //the presale phase will run for 4 months
     }else if(icoPhase == ICOPresalePhase.Phase3){
       uint phase3Rate = 30;
       icoPhaseRate = phase3Rate.div(100); //set pricerate to 0.3 for the last phase of the presale
       icoPhaseAmount = 25000000 * 10 ** 18; //set the token amount to 25000000 for the last phase of the presale
+      icoPhaseStakingPeriod = 30 days * 2; //the presale phase will run for 2 months
     }
     return true;
   }
