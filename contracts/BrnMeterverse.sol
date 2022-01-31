@@ -26,7 +26,7 @@ contract BrnMeterverse is Ownable, IBEP2E {
     _name = "Brn Meterverse"; 
     _symbol = "BRN";
     _decimals = 18;
-    _totalSupply = 1000000000;
+    _totalSupply = 1000000000 * 10 ** 18;
     _paused = false;
     balances[msg.sender] = balances[msg.sender].add(_totalSupply);
     emit Transfer(address(0), msg.sender, _totalSupply);
