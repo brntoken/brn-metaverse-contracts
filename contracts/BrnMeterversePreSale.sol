@@ -2,21 +2,28 @@
 pragma solidity ^0.8.0;
 pragma abicoder v2;
 
-import '@openzeppelin/contracts/token/ERC20/utils/TokenTimeLock.sol';
-import '@openzeppelin/contracts/access/Ownable.sol';
-import '@openzeppelin/contracts/access/AccessControl.sol';
-import '@openzeppelin/contracts/finance/PaymentSplitter.sol';
-import '@openzeppelin/contracts/finance/VestingWallet.sol';
-import '@openzeppelin/contracts/utils/math/SafeMath.sol';
-import '@openzeppelin/contracts/security/Pausable.sol';
-import '@openzeppelin/contracts/security/PullPayment.sol';
+import 'openzeppelin-solidity/contracts/token/ERC20/utils/TokenTimeLock.sol';
+import 'openzeppelin-solidity/contracts/access/Ownable.sol';
+import 'openzeppelin-solidity/contracts/access/AccessControl.sol';
+import 'openzeppelin-solidity/contracts/finance/PaymentSplitter.sol';
+import 'openzeppelin-solidity/contracts/finance/VestingWallet.sol';
+import 'openzeppelin-solidity/contracts/utils/math/SafeMath.sol';
+import 'openzeppelin-solidity/contracts/security/Pausable.sol';
+import 'openzeppelin-solidity/contracts/security/PullPayment.sol';
+import '@openzeppelin/contracts/crowdsale/Crowdsale.sol';
+import '@openzeppelin/contracts/crowdsale/validation/WhitelistCrowdsale.sol';
+import '@openzeppelin/contracts/crowdsale/validation/TimedCrowdsale.sol';
+import '@openzeppelin/contracts/crowdsale/validation/CappedCrowdsale.sol';
+import '@openzeppelin/contracts/crowdsale/validation/PausableCrowdsale.sol';
+import '@openzeppelin/contracts/crowdsale/distribution/FinalizableCrowdsale.sol';
+import '@openzeppelin/contracts/crowdsale/distribution/RefundableCrowdsale.sol';
 import './BrnMeterverse.sol';
 
 /**
 * @title BrnMeterversePreSale
 * @dev A contract that manages the BRN Meterverse Presale logic
 */
-contract BrnMeterversePreSale is Ownable, Pausable {
+contract BrnMeterversePreSale is Ownable, Crowdsale, MintedCrowdsale, CappedCrowdsale, TimedCrowdsale, WhitelistedCrowdsale, RefundableCrowdsale{
   using SafeMath for uint256;
 
   //presale phases
@@ -50,22 +57,34 @@ contract BrnMeterversePreSale is Ownable, Pausable {
   BrnMeterverse internal token;
 
   constructor(
+    uint256 _rate,
+    address _wallet,
     BrnMeterverse _token,
+    uint256 _cap,
+    uint256 _openingTime,
+    uint256 _closingTime,
+    uint256 _goal,
     address _partnershipFundAddress,
     address _airdropFundAddress,
     address _marketingFundAddress ,
     address _staffFundAddress,
     address _burnFundAddress,
     address _holdersFundAddress 
-  ) public {
-    token = _token;
-    partnershipFundAddress = _partnershipFundAddress;
-    airdropFundAddress = _airdropFundAddress;
-    marketingFundAddress = _marketingFundAddress;
-    staffFundAddress = _staffFundAddress;
-    burnFundAddress = _burnFundAddress;
-    holdersFundAddress = _holdersFundAddress;
-    //token = new BrnMeterverse();
+  ) 
+    Crowdsale(_rate, _wallet, _token)
+    CappedCrowdsale(_cap)
+    TimedCrowdsale(_openingTime, _closingTime)
+    RefundableCrowdsale(_goal) public 
+    {
+      require(_goal <= _cap);
+      token = _token;
+      icoPhaseRate = _rate;
+      partnershipFundAddress = _partnershipFundAddress;
+      airdropFundAddress = _airdropFundAddress;
+      marketingFundAddress = _marketingFundAddress;
+      staffFundAddress = _staffFundAddress;
+      burnFundAddress = _burnFundAddress;
+      holdersFundAddress = _holdersFundAddress;
   }
 
   /**
@@ -99,24 +118,5 @@ contract BrnMeterversePreSale is Ownable, Pausable {
       icoPhaseStakingPeriod = 30 days * 2; //the presale phase will run for 2 months
     }
     return true;
-  }
-
-  /**
-  * @dev enables a user to buy specied amount of token from the presale taking into consideration the cap and goal set
-  */
-  function buyToken() public payable{
-
-  }
-
-  receive() external payable {
-    buyToken();
-  }
-
-  /**
-  * @notice this is responsible for sending the tokens to the buyer while also sending ETH to the wallets
-  * only triggered by the contract owner once the ico phases are done
-  */
-  function finalize() public onlyOwner{
-
   }
 }

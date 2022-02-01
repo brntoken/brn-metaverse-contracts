@@ -3,6 +3,7 @@ pragma solidity ^0.8.0;
 pragma abicoder v2;
 
 import '@openzeppelin/contracts/access/Ownable.sol';
+import 'pancakeswap-peripheral/contracts/PancakeRouter.sol';
 
 /**
 * @notice Interacts with pancakeswap to create a new liquidity pool pair for BRN/WBNB
@@ -39,8 +40,11 @@ contract BrnPancakeSwapV2Integration is Ownable {
     
     mapping(address => bool) public brnBnbPairExists;
 
+    PancakeRouter pancakeSwapV2Router;
+
     constructor(address _brnTokenAddress) public {
         brnTokenAddress = _brnTokenAddress;
+        pancakeSwapV2Router = new PancakeRouter(); // provide factory address and WETH address
     }
 
     /**
