@@ -202,17 +202,6 @@ contract BrnMeterverse is Ownable, IBEP2E {
   }
 
   /**
-   * @dev Creates `amount` tokens and assigns them to `msg.sender`, increasing
-   * the total supply.
-   * @param _amount uint 
-   * @return bool if success othwerise false
-   */
-  function mint(uint _amount) public onlyOwner whenNotPaused returns (bool) {
-    _mint(msg.sender, _amount);
-    return true;
-  }
-
-  /**
    * @dev Destroys amount tokens from account, reducing the
    * total supply.
    * @dev account cannot be the zero address.
@@ -279,24 +268,7 @@ contract BrnMeterverse is Ownable, IBEP2E {
     emit Transfer(_sender, _recipient, _amount);
     _afterTokenTransfer(_sender, _recipient, _amount);
   }
-
-  /** @dev Creates amount tokens and assigns them to account, increasing
-   * the total supply.
-   * @dev to cannot be the zero address.
-   * @param _account address 
-   * @param _amount uint 
-   */
-  function _mint(address _account, uint _amount) internal virtual {
-    require(_account != address(0), "BEP2E: mint to the zero address");
-
-    _beforeTokenTransfer(address(0), _account, _amount);
-
-    _totalSupply = _totalSupply.add(_amount);
-    balances[_account] = balances[_account].add(_amount);
-    emit Transfer(address(0), _account, _amount);
-    _afterTokenTransfer(address(0), _account, _amount);
-  }
-
+  
   /**
    * @dev Destroys amount tokens from account, reducing the
    * total supply.
