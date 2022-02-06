@@ -1,6 +1,7 @@
 {
   "dependencies": {
-    "@openzeppelin/contracts": "v2.5",
+    "@chainlink/contracts": "^0.3.1",
+    "@openzeppelin/contracts": "^4.4.2",
     "@pancakeswap/pancake-swap-lib": "^0.0.4",
     "@truffle/hdwallet-provider": "^2.0.1",
     "@uniswap/v2-core": "^1.0.1",
