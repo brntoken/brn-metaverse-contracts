@@ -54,7 +54,9 @@ contract Presale is Pausable, Ownable {
     // Mapping of whitelisted users.
     mapping(address => bool) whitelist;
 
-    mapping(address => uint256) tokenBalance;
+    mapping(address => uint256) phase1Balance;
+    mapping(address => uint256) phase2Balance;
+    mapping(address => uint256) phase3Balance;
 
     address priceFeedAddress;
 
@@ -155,7 +157,13 @@ contract Presale is Pausable, Ownable {
      * @dev Checks whether the period in which the crowdsale is open has already elapsed.
      * @return Whether crowdsale period has elapsed
      */
-    function hasClosed() public view returns (bool) {
+    function phase1HasClosed() public view returns (bool) {
+        return block.timestamp > phase2Start;
+    }
+    function phase2HasClosed() public view returns (bool) {
+        return block.timestamp > phase2Start;
+    }
+    function presaleHasClosed() public view returns (bool) {
         return block.timestamp > presaleEnd;
     }
 
@@ -191,7 +199,7 @@ contract Presale is Pausable, Ownable {
         isWhitelisted(beneficiary)
         onlyWhileOpen
     {
-        require(!hasClosed(), "The presale is over");
+        require(!presaleHasClosed(), "The presale is over");
         require(beneficiary != address(0));
         require(msg.value > 0);
         uint256 amount = coinToUSD(msg.value);
@@ -218,14 +226,16 @@ contract Presale is Pausable, Ownable {
 
         uint256 tokenAmount = (amount * 100) / pricePerToken;
 
-        tokenBalance[msg.sender] += tokenAmount;
         if (block.timestamp > phase1Start && block.timestamp < phase2Start) {
+            phase1Balance[msg.sender] += tokenAmount;
             tokenSoldPhase1 += tokenAmount;
         }
         if (block.timestamp > phase2Start && block.timestamp < phase3Start) {
+            phase2Balance[msg.sender] += tokenAmount;
             tokenSoldPhase2 += tokenAmount;
         }
         if (block.timestamp > phase3Start && block.timestamp < presaleEnd) {
+            phase3Balance[msg.sender] += tokenAmount;
             tokenSoldPhase3 += tokenAmount;
         }
 
@@ -239,9 +249,21 @@ contract Presale is Pausable, Ownable {
 
     // withdraw ERC20 Tokens
     function withdrawToken() public whenNotPaused isWhitelisted(msg.sender) {
-        require(hasClosed(), "Presale is still on");
-        uint256 balance = tokenBalance[msg.sender];
-        tokenBalance[msg.sender] = 0;
+        require(presaleHasClosed() || phase1HasClosed() || phase2HasClosed(), "All presale phases are still on is still on");
+        uint256 balance;
+        if (presaleHasClosed()) {
+            balance = phase1Balance[msg.sender] + phase2Balance[msg.sender] + phase3Balance[msg.sender];
+            phase1Balance[msg.sender] = 0;
+            phase2Balance[msg.sender] = 0;
+            phase3Balance[msg.sender] = 0;
+        } else if (phase2HasClosed()) {
+            balance = phase1Balance[msg.sender] + phase2Balance[msg.sender];
+            phase1Balance[msg.sender] = 0;
+            phase2Balance[msg.sender] = 0;
+        } else if (phase1HasClosed()) {
+            balance = phase1Balance[msg.sender];
+            phase1Balance[msg.sender] = 0;
+        }
         IERC20(TokenAddress).transfer(msg.sender, balance);
         emit TokenWithdrawal(msg.sender, balance);
     }
