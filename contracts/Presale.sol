@@ -21,15 +21,13 @@ contract Presale is Pausable, Ownable {
      * crowdsale constructor
      * @param _wallet who receives invested ether
      * @param _cap above which the crowdsale is closed
-     * @param _rate is the amounts of tokens given for 1 ether
      */
 
     constructor(
         address _priceFeedAddress,
         address _tokenAddress,
         address payable _wallet,
-        uint256 _cap,
-        uint256 _rate
+        uint256 _cap // 50,000,000 BRN
     ) {
         require(_wallet != address(0));
         require(_tokenAddress != address(0));
@@ -39,7 +37,6 @@ contract Presale is Pausable, Ownable {
         priceFeedAddress = _priceFeedAddress;
 
         wallet = _wallet;
-        rate = _rate; // e.g 1 TKN = 0.10 USD
         cap = _cap * (10**18); //cap in tokens base units (=1000000 tokens)
         phase1Cap = (cap * 14) / 100;
         phase2Cap = (cap * 36) / 100;
@@ -84,8 +81,6 @@ contract Presale is Pausable, Ownable {
     uint256 public phase1Cap;
     uint256 public phase2Cap;
     uint256 public phase3Cap;
-
-    uint256 public rate;
 
     string public contactInformation;
 
@@ -225,6 +220,7 @@ contract Presale is Pausable, Ownable {
         }
 
         uint256 tokenAmount = (amount * 100) / pricePerToken;
+        require(tokenAmount + phaseCap <= phaseCap, "Greater than phase cap");
 
         if (block.timestamp > phase1Start && block.timestamp < phase2Start) {
             phase1Balance[msg.sender] += tokenAmount;
