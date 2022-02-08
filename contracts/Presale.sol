@@ -51,9 +51,9 @@ contract Presale is Pausable, Ownable {
     // Mapping of whitelisted users.
     mapping(address => bool) whitelist;
 
-    mapping(address => uint256) phase1Balance;
-    mapping(address => uint256) phase2Balance;
-    mapping(address => uint256) phase3Balance;
+    mapping(address => uint256) public phase1Balance;
+    mapping(address => uint256) public phase2Balance;
+    mapping(address => uint256) public phase3Balance;
 
     address priceFeedAddress;
 
@@ -183,6 +183,28 @@ contract Presale is Pausable, Ownable {
         buyTokens(msg.sender);
     }
 
+    function getPhaseArg() public view returns(uint256, uint256, uint256) {
+        uint256 phaseCap;
+        uint256 tokensSold;
+        uint256 pricePerToken;
+        if (block.timestamp > phase1Start && block.timestamp < phase2Start) {
+            phaseCap = phase1Cap;
+            tokensSold = tokenSoldPhase1;
+            pricePerToken = 10 * 10**18;
+        }
+        if (block.timestamp > phase2Start && block.timestamp < phase3Start) {
+            phaseCap = phase2Cap;
+            tokensSold = tokenSoldPhase2;
+            pricePerToken = 20 * 10**18;
+        }
+        if (block.timestamp > phase3Start && block.timestamp < presaleEnd) {
+            phaseCap = phase3Cap;
+            tokensSold = tokenSoldPhase3;
+            pricePerToken = 30 * 10**18;
+        }
+        return (phaseCap, tokensSold, pricePerToken);
+    }
+
     /**
      * Low level token purchse function
      * @param beneficiary will recieve the tokens.
@@ -197,41 +219,27 @@ contract Presale is Pausable, Ownable {
         require(!presaleHasClosed(), "The presale is over");
         require(beneficiary != address(0));
         require(msg.value > 0);
+
         uint256 amount = coinToUSD(msg.value);
-        require(amount >= 10, "The enter amount is below minimum");
-        require(amount <= 3000, "The enter amount is above maximum");
-        uint256 phaseCap;
-        uint256 tokensSold;
-        uint256 pricePerToken;
-        if (block.timestamp > phase1Start && block.timestamp < phase2Start) {
-            phaseCap = phase1Cap;
-            tokensSold = tokenSoldPhase1;
-            pricePerToken = 10;
-        }
-        if (block.timestamp > phase2Start && block.timestamp < phase3Start) {
-            phaseCap = phase2Cap;
-            tokensSold = tokenSoldPhase2;
-            pricePerToken = 20;
-        }
-        if (block.timestamp > phase3Start && block.timestamp < presaleEnd) {
-            phaseCap = phase3Cap;
-            tokensSold = tokenSoldPhase3;
-            pricePerToken = 30;
-        }
+
+        require(amount >= 10 * 10**18, "The enter amount is below minimum");
+        require(amount <= 3000 * 10**18, "The enter amount is above maximum");
+
+        (uint256 phaseCap, uint256 tokensSold, uint256 pricePerToken ) = getPhaseArg();
 
         uint256 tokenAmount = (amount * 100) / pricePerToken;
-        require(tokenAmount + phaseCap <= phaseCap, "Greater than phase cap");
+        require(tokenAmount + tokensSold <= phaseCap, "Greater than phase cap");
 
         if (block.timestamp > phase1Start && block.timestamp < phase2Start) {
-            phase1Balance[msg.sender] += tokenAmount;
+            phase1Balance[beneficiary] += tokenAmount;
             tokenSoldPhase1 += tokenAmount;
         }
         if (block.timestamp > phase2Start && block.timestamp < phase3Start) {
-            phase2Balance[msg.sender] += tokenAmount;
+            phase2Balance[beneficiary] += tokenAmount;
             tokenSoldPhase2 += tokenAmount;
         }
         if (block.timestamp > phase3Start && block.timestamp < presaleEnd) {
-            phase3Balance[msg.sender] += tokenAmount;
+            phase3Balance[beneficiary] += tokenAmount;
             tokenSoldPhase3 += tokenAmount;
         }
 

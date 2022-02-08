@@ -3,7 +3,7 @@ const MockPriceFeedContract = artifacts.require("MockV3Aggregator");
 const PresaleContract = artifacts.require("Presale");
 
 module.exports = async function(deployer, network, accounts) {
-    if (network == "development" || network == "test") {
+    if (network == "development" || network == "test" || network == "ganache") {
         const brnToken = await BrnMeterverse.deployed();
         const priceFeed = await MockPriceFeedContract.deployed();
         await deployer.deploy(PresaleContract, priceFeed.address, brnToken.address, accounts[0], 50000000);
