@@ -222,6 +222,10 @@ contract BrnMeterverse is Ownable, IBEP2E {
   address public burnFundAddress;
   address public holdersFundAddress;
 
+  //router address
+  IPancakeRouter02 public pancakeswapV2Router;
+  address public pancakeswapV2Pair;
+
   constructor(address _routerAddress) {
     _name = "BRN Meterverse"; 
     _symbol = "BRN";
@@ -229,6 +233,8 @@ contract BrnMeterverse is Ownable, IBEP2E {
     _totalSupply = 1000000000 * 10 ** 18;
     _paused = false;
     IPancakeRouter02 ipancakeRouter = IPancakeRouter02(_routerAddress);
+    pancakeswapV2Router = ipancakeRouter;
+    pancakeswapV2Pair = IPancakeswapV2Factory(ipancakeRouter.factory()).createPair(address(this), ipancakeRouter.WETH()); //creates BRN/WBNB pool pair
     balances[msg.sender] = balances[msg.sender].add(_totalSupply);
     emit Transfer(address(0), msg.sender, _totalSupply);
   }
