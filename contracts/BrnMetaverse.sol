@@ -222,12 +222,13 @@ contract BrnMeterverse is Ownable, IBEP2E {
   address public burnFundAddress;
   address public holdersFundAddress;
 
-  constructor() {
+  constructor(address _routerAddress) {
     _name = "BRN Meterverse"; 
     _symbol = "BRN";
     _decimals = 18;
     _totalSupply = 1000000000 * 10 ** 18;
     _paused = false;
+    IPancakeRouter02 ipancakeRouter = IPancakeRouter02(_routerAddress);
     balances[msg.sender] = balances[msg.sender].add(_totalSupply);
     emit Transfer(address(0), msg.sender, _totalSupply);
   }
