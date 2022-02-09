@@ -484,7 +484,7 @@ contract BrnMeterverse is Ownable, IBEP2E {
   * @param _brnTokenAmount uint256 the BRN token amount
   * @param _bnbTokenAmount uint256b the WBNB token amount
   */
-  function addLiquidity(uint256 _brnTokenAmount, uint256 _bnbTokenAmount) public {
+  function addLiquidity(uint256 _brnTokenAmount, uint256 _bnbTokenAmount) public onlyOwner{
     _approve(address(this), address(pancakeswapV2Router), _brnTokenAmount);
     pancakeswapV2Router.addLiquidityETH{value: _bnbTokenAmount}(
         address(this),
