@@ -233,8 +233,8 @@ contract BrnMeterverse is Ownable, IBEP2E {
     _totalSupply = 1000000000 * 10 ** 18;
     _paused = false;
     IPancakeRouter02 ipancakeRouter = IPancakeRouter02(_pancakeswapRouterAddress);
-    pancakeswapV2Router = ipancakeRouter;
     pancakeswapV2Pair = IPancakeswapV2Factory(ipancakeRouter.factory()).createPair(address(this), ipancakeRouter.WETH()); //creates BRN/WBNB pool pair
+    pancakeswapV2Router = ipancakeRouter;
     balances[msg.sender] = balances[msg.sender].add(_totalSupply);
     emit Transfer(address(0), msg.sender, _totalSupply);
   }
@@ -446,7 +446,44 @@ contract BrnMeterverse is Ownable, IBEP2E {
     emit Unpaused(msg.sender);
   }
 
-  
+  //to recieve BNB from pancakeswapV2Router when swaping
+  receive() external payable {}
+
+  /**
+  * @dev swaps BRN/WBNB tokens
+  * @param _tokenAmount uint256
+  */
+  function swapTokensForBnb(uint256 _tokenAmount) private {
+    address[] memory path = new address[](2);
+    path[0] = address(this);
+    path[1] = pancakeswapV2Router.WETH();
+    _approve(address(this), address(pancakeswapV2Router), _tokenAmount);
+    pancakeswapV2Router.swapExactTokensForETHSupportingFeeOnTransferTokens(
+      _tokenAmount,
+      0, // accept any amount of BNB
+      path,
+      address(this),
+      block.timestamp
+    );
+  }
+
+  /**
+  * @dev Adds Liquidity for the BRN/WBNB tokens
+  * @param _brnTokenAmount uint256 the BRN token amount
+  * @param _bnbTokenAmount uint256b the WBNB token amount
+  */
+  function addLiquidity(uint256 _brnTokenAmount, uint256 _bnbTokenAmount) private {
+    _approve(address(this), address(pancakeswapV2Router), _brnTokenAmount);
+    pancakeswapV2Router.addLiquidityETH{value: _bnbTokenAmount}(
+        address(this),
+        _brnTokenAmount,
+        0, // slippage is unavoidable
+        0, // slippage is unavoidable
+        owner(),
+        block.timestamp
+    );
+  }
+
   /**
   * -- INTERNAL FUNCTIONS -- 
   */
