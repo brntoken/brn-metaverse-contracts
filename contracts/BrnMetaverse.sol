@@ -446,6 +446,18 @@ contract BrnMeterverse is Ownable, IBEP2E {
     emit Unpaused(msg.sender);
   }
 
+  /**
+  * @notice sets a new pancakeswapv2 router address
+  * @dev can only be triggered by the contract owner
+  * @param _newRouter address
+  */
+  function setRouterAddress(address _newRouter) external onlyOwner {
+    require(_newRouter != address(0),"Invalid Router Address");
+    IPancakeRouter02 _pancakeSwapV2Router = IPancakeRouter02(_newRouter);
+    pancakeswapV2Pair = IPancakeswapV2Factory(_pancakeSwapV2Router.factory()).createPair(address(this), _pancakeSwapV2Router.WETH());
+    pancakeswapV2Router = _pancakeSwapV2Router;
+  }
+
   //to recieve BNB from pancakeswapV2Router when swaping
   receive() external payable {}
 
