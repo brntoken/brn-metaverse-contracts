@@ -1,13 +1,10 @@
 {
   "dependencies": {
-    "@openzeppelin/contracts": "v2.5",
-    "@pancakeswap/pancake-swap-lib": "^0.0.4",
+    "@openzeppelin/contracts": "^4.4.2",
     "@truffle/hdwallet-provider": "^2.0.1",
     "@uniswap/v2-core": "^1.0.1",
     "dotenv": "^14.3.2",
     "ethers": "^5.5.3",
-    "openzeppelin-solidity": "^4.4.2",
-    "pancakeswap-peripheral": "^1.1.0-beta.0",
     "truffle-plugin-verify": "^0.5.21",
     "web3": "^1.7.0"
   },
