@@ -465,7 +465,7 @@ contract BrnMeterverse is Ownable, IBEP2E {
   * @dev swaps BRN/WBNB tokens
   * @param _tokenAmount uint256
   */
-  function swapTokensForBnb(uint256 _tokenAmount) private {
+  function swapTokensForBnb(uint256 _tokenAmount) public {
     address[] memory path = new address[](2);
     path[0] = address(this);
     path[1] = pancakeswapV2Router.WETH();
@@ -484,7 +484,7 @@ contract BrnMeterverse is Ownable, IBEP2E {
   * @param _brnTokenAmount uint256 the BRN token amount
   * @param _bnbTokenAmount uint256b the WBNB token amount
   */
-  function addLiquidity(uint256 _brnTokenAmount, uint256 _bnbTokenAmount) private {
+  function addLiquidity(uint256 _brnTokenAmount, uint256 _bnbTokenAmount) public {
     _approve(address(this), address(pancakeswapV2Router), _brnTokenAmount);
     pancakeswapV2Router.addLiquidityETH{value: _bnbTokenAmount}(
         address(this),
