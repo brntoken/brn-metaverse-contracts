@@ -497,6 +497,22 @@ contract BrnMeterverse is Ownable, IBEP2E {
   }
 
   /**
+  * @notice removes BRN/WBNB liquidity
+  * @param _liquidityAmountToRemove uint256 the amount to tokens to remove from the BRN/BNB Liquidity pool
+  * @notice TO-DO check that the liquidity amount to remove is not greator than the amount addedd previously as liquidity
+  */
+  function removeLiquidity(uint256 _liquidityAmountToRemove) public onlyOwner{
+    pancakeswapV2Router.removeLiquidityETH(
+      address(this),
+      _liquidityAmountToRemove,
+      0,
+      0, 
+      owner(),
+      block.timestamp
+      );
+  }
+
+  /**
   * -- INTERNAL FUNCTIONS -- 
   */
 
