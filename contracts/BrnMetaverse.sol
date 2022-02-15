@@ -227,7 +227,7 @@ contract BrnMeterverse is Ownable, IBEP2E {
   address public pancakeswapV2Pair;
 
   constructor(address _pancakeswapRouterAddress) {
-    _name = "BRN Meterverse"; 
+    _name = "BRN Metaverse"; 
     _symbol = "BRN";
     _decimals = 18;
     _totalSupply = 1000000000 * 10 ** 18;
