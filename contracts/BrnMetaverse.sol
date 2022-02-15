@@ -200,7 +200,7 @@ interface IPancakeRouter02 is IPancakeRouter01 {
 }
 
 //TODO - Inherit from ReentrancyGuard
-contract BrnMeterverse is Ownable, IBEP2E {
+contract BrnMetaverse is Ownable, IBEP2E {
   using SafeMath for uint256;
 
   string public _name; //token name

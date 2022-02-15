@@ -1,10 +1,10 @@
-const BrnMeterverse = artifacts.require('BrnMeterverse');
+const BrnMetaverse = artifacts.require('BrnMetaverse');
 const PresaleContract = artifacts.require("Presale");
 const web3 = require('web3');
 
 module.exports = async function(deployer, network, accounts) {
     if (network == "bsc") {
-        let token = await BrnMeterverse.deployed()
+        let token = await BrnMetaverse.deployed()
         let presale = await PresaleContract.deployed()
         let partnership;
         let marketing;
@@ -13,7 +13,7 @@ module.exports = async function(deployer, network, accounts) {
         let holders;
         await token.transfer(presale.address, web3.utils.toWei("50000000")) // Sent 50 000,000 BRN to the presale contract
     } else {
-        let token = await BrnMeterverse.deployed()
+        let token = await BrnMetaverse.deployed()
         let presale = await PresaleContract.deployed()
 
         let totalSupply = (await token.totalSupply()).toString()
