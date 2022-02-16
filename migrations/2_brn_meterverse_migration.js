@@ -7,5 +7,5 @@ module.exports = async function (deployer) {
     const txFee = 200;
     const _lpBuyFee = 100;
     const _lpSellFee = 3000;
-    await deployer.deploy(BrnMetaverse, pancakeSwapRouterAddress, marketingWalletAddress,txFee, liquidityFee,_lpBuyFee,_lpSellFee);
+    await deployer.deploy(BrnMetaverse, marketingWalletAddress,txFee, liquidityFee,_lpBuyFee,_lpSellFee);
 };

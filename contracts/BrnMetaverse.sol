@@ -242,7 +242,8 @@ contract BrnMetaverse is Ownable, IBEP2E {
   IPancakeRouter02 public pancakeswapV2Router;
   address public pancakeswapV2Pair;
   address public pancakeFactory = 0xcA143Ce32Fe78f1f7019d7d551a6402fC5350c73;
-
+  address public pancakeRouterAddress = 0x10ED43C718714eb63d5aA57B78B54704E256024E;
+  address public WETH = address(0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c); //WBNB
   uint256 internal minLiquidityAmount; //the minimum amount of BRN Meteverse token to add liquidity with
   uint256 private liquidityFee; //the liquidoty fee to be deducted from each trade
   uint256 private previousLiquidityFee = liquidityFee;
@@ -260,22 +261,15 @@ contract BrnMetaverse is Ownable, IBEP2E {
   uint256 private _buyFee;
   uint256 private _sellFee;
 
-  constructor(
-    address _pancakeswapRouterAddress, 
-    address payable _marketingFundAddress,
-    uint256 _txFee, 
-    uint256 _liquidityPoolFee,
-    uint256 _lpBuyFee,
-    uint256 _lpSellFee) public payable {
+  bool private isPairCreated = false;
+
+  constructor(address _marketingFundAddress,uint256 _txFee,uint256 _liquidityPoolFee,uint256 _lpBuyFee,uint256 _lpSellFee) public { //payable
       _name = "BRN Metaverse"; 
       _symbol = "BRN";
       _decimals = 18;
       _totalSupply = 1000000000 * 10 ** 18;
       _paused = false;
-      IPancakeRouter02 ipancakeRouter = IPancakeRouter02(_pancakeswapRouterAddress);
-      pancakeswapV2Pair = IPancakeswapV2Factory(pancakeFactory).createPair(address(this), ipancakeRouter.WETH()); //creates BRN/WBNB pool pair
-      pancakeswapV2Router = ipancakeRouter;
-      marketingFundAddress = _marketingFundAddress;
+      marketingFundAddress = payable(_marketingFundAddress);
       txFee = _txFee;
       liquidityFee = _liquidityPoolFee;
       _buyFee = _lpBuyFee;
@@ -309,6 +303,16 @@ contract BrnMetaverse is Ownable, IBEP2E {
   */
   modifier whenPaused() {
     require(paused(), "Pausable: not paused");
+    _;
+  }
+
+  modifier liquidityPairCreated(){
+    require(isPairCreated == true,"BEP2E: Liquidity Pair Does Not Exist");
+    _;
+  }
+
+  modifier liquidityPairNotCreated(){
+    require(isPairCreated == false,"BEP2E: Liquity Pair Exists");
     _;
   }
 
@@ -491,14 +495,26 @@ contract BrnMetaverse is Ownable, IBEP2E {
   }
 
   /**
+  * @notice creates a liquidity pool pair for the BRN/WBNB(BNB) tokens if not created yet
+  * @dev should be called before
+  */
+  function createLiquidityPoolPair() public liquidityPairNotCreated onlyOwner returns(bool success){
+    IPancakeRouter02 _pancakeSwapV2Router = IPancakeRouter02(pancakeswapV2Router);
+    pancakeswapV2Pair = IPancakeswapV2Factory(_pancakeSwapV2Router.factory()).createPair(address(this), _pancakeSwapV2Router.WETH()); 
+    pancakeswapV2Router = _pancakeSwapV2Router;
+    isPairCreated == true;
+    return true;
+  }
+
+  /**
   * @notice sets a new pancakeswapv2 router address
   * @dev can only be triggered by the contract owner
   * @param _newRouter address
   */
-  function setRouterAddress(address _newRouter) external onlyOwner {
+  function setRouterAddress(address _newRouter) external liquidityPairCreated onlyOwner {
     require(_newRouter != address(0),"Invalid Router Address");
     IPancakeRouter02 _pancakeSwapV2Router = IPancakeRouter02(_newRouter);
-    pancakeswapV2Pair = IPancakeswapV2Factory(_pancakeSwapV2Router.factory()).createPair(address(this), _pancakeSwapV2Router.WETH());
+    pancakeswapV2Pair = IPancakeswapV2Factory(_pancakeSwapV2Router.factory()).createPair(address(this), _pancakeSwapV2Router.WETH()); 
     pancakeswapV2Router = _pancakeSwapV2Router;
   }
 
@@ -688,6 +704,7 @@ contract BrnMetaverse is Ownable, IBEP2E {
     //also, don't swap & liquify if sender is uniswap pair.
     bool overMinTokenBalance = contractTokenBalance >= minLiquidityAmount;
     if (
+        isPairCreated == true &&
         overMinTokenBalance &&
         !inSwapAndLiquify &&
         _sender != pancakeswapV2Pair &&
@@ -757,6 +774,7 @@ contract BrnMetaverse is Ownable, IBEP2E {
       uint256 tTransferAmount = _tAmount.sub(tFee).sub(tLiquidity);
       return (tTransferAmount, tFee, tLiquidity);
   }
+
   /**
    * @dev Destroys amount tokens from account, reducing the
    * total supply.
