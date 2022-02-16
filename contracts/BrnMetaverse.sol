@@ -211,22 +211,42 @@ contract BrnMetaverse is Ownable, IBEP2E {
 
   mapping(address => uint) private balances; //how token much does this address have
   mapping(address => mapping(address => uint)) private allowances; //the amount approved by the owner to be spent on their behalf
+
   event Unpaused(address account); // Emitted when the pause is triggered by `account`.
   event Paused(address account); //Emitted when the pause is lifted by `account`.
+  event MinTokensBeforeSwapUpdated(uint256 minTokensBeforeSwap);
+  event SwapAndLiquifyEnabledUpdated(bool enabled);
+  event SwapAndLiquify(
+      uint256 tokensSwapped,
+      uint256 ethReceived,
+      uint256 tokensIntoLiqudity
+  );
+
+  modifier lockTheSwap {
+      inSwapAndLiquify = true;
+      _;
+      inSwapAndLiquify = false;
+  }
 
   //Wallet Addresses
-  address public partnershipFundAddress;
-  address public airdropFundAddress;
-  address public marketingFundAddress;
-  address public staffFundAddress;
-  address public burnFundAddress;
-  address public holdersFundAddress;
+  address payable private partnershipFundAddress;
+  address payable private airdropFundAddress;
+  address payable private marketingFundAddress;
+  address payable private staffFundAddress;
+  address payable private burnFundAddress;
+  address payable private holdersFundAddress;
 
   //router address
   IPancakeRouter02 public pancakeswapV2Router;
   address public pancakeswapV2Pair;
 
-  constructor(address _pancakeswapRouterAddress) {
+  uint256 internal minLiquidityAmount; //the minimum amount of BRN Meteverse token to add liquidity with
+  uint256 private liquidityFee; //the liquidoty fee to be deducted from each trade
+
+  bool inSwapAndLiquify;
+  bool public swapAndLiquifyEnabled = true;
+
+  constructor(address _pancakeswapRouterAddress, address payable _marketingFundAddress, uint256 _liquidityFee) public payable {
     _name = "BRN Metaverse"; 
     _symbol = "BRN";
     _decimals = 18;
@@ -235,6 +255,9 @@ contract BrnMetaverse is Ownable, IBEP2E {
     IPancakeRouter02 ipancakeRouter = IPancakeRouter02(_pancakeswapRouterAddress);
     pancakeswapV2Pair = IPancakeswapV2Factory(ipancakeRouter.factory()).createPair(address(this), ipancakeRouter.WETH()); //creates BRN/WBNB pool pair
     pancakeswapV2Router = ipancakeRouter;
+    marketingFundAddress = _marketingFundAddress;
+    liquidityFee = _liquidityFee;
+    minLiquidityAmount = (_totalSupply * 2 / 10000) * 10 ** _decimals;
     balances[msg.sender] = balances[msg.sender].add(_totalSupply);
     emit Transfer(address(0), msg.sender, _totalSupply);
   }
@@ -458,14 +481,48 @@ contract BrnMetaverse is Ownable, IBEP2E {
     pancakeswapV2Router = _pancakeSwapV2Router;
   }
 
+  /**
+  * @notice enables the contract owner to set the pancakeswap liquidityFee
+  * @param _liquidityFee uint256
+  */
+  function setLiquidityFee(uint256 _liquidityFee) external onlyOwner() {
+      liquidityFee = _liquidityFee;
+  }
+
+  function setSwapAndLiquifyEnabled(bool _enabled) public onlyOwner {
+      swapAndLiquifyEnabled = _enabled;
+      emit SwapAndLiquifyEnabledUpdated(_enabled);
+  }
+
+  /**
+  * @notice calculates the liquidityfee based on yhe provided amount
+  * @param _amount the amount to calculate the liquidity fee against
+  */
+  function calculateLiquidityFee(uint256 _amount) private view returns (uint256) {
+      return _amount.mul(liquidityFee).div(
+            10**2
+        );
+  }
+  
   //to recieve BNB from pancakeswapV2Router when swaping
   receive() external payable {}
+
+
+  function swapAndLiquify(uint256 contractTokenBalance) private lockTheSwap {
+      uint256 half = contractTokenBalance.div(2);
+      uint256 otherHalf = contractTokenBalance.sub(half);
+      uint256 initialBalance = address(this).balance;
+      swapTokensForBnb(half); 
+      uint256 newBalance = address(this).balance.sub(initialBalance);
+      addLiquidity(otherHalf, newBalance);
+      emit SwapAndLiquify(half, newBalance, otherHalf);
+  }
 
   /**
   * @dev swaps BRN/WBNB tokens
   * @param _tokenAmount uint256
   */
-  function swapTokensForBnb(uint256 _tokenAmount) public {
+  function swapTokensForBnb(uint256 _tokenAmount) private {
     address[] memory path = new address[](2);
     path[0] = address(this);
     path[1] = pancakeswapV2Router.WETH();
@@ -482,9 +539,9 @@ contract BrnMetaverse is Ownable, IBEP2E {
   /**
   * @dev Adds Liquidity for the BRN/WBNB tokens
   * @param _brnTokenAmount uint256 the BRN token amount
-  * @param _bnbTokenAmount uint256b the WBNB token amount
+  * @param _bnbTokenAmount uint256 the WBNB token amount
   */
-  function addLiquidity(uint256 _brnTokenAmount, uint256 _bnbTokenAmount) public onlyOwner{
+  function addLiquidity(uint256 _brnTokenAmount, uint256 _bnbTokenAmount) private{
     _approve(address(this), address(pancakeswapV2Router), _brnTokenAmount);
     pancakeswapV2Router.addLiquidityETH{value: _bnbTokenAmount}(
         address(this),
@@ -512,6 +569,23 @@ contract BrnMetaverse is Ownable, IBEP2E {
       );
   }
 
+  function buybackAndBurn(uint256 _bnbAmountInHundreds) external onlyOwner {
+    uint ethAmount = _bnbAmountInHundreds * 10**16;
+    require(address(this).balance >= ethAmount, "Contract does not have enough BNB.");
+    address[] memory path = new address[](2);
+    path[0] = pancakeswapV2Router.WETH();
+    path[1] = address(this);
+
+
+    pancakeswapV2Router.swapExactETHForTokensSupportingFeeOnTransferTokens
+    {value: ethAmount}
+      (
+        0,
+        path,
+        address(0),
+        block.timestamp
+      );
+   }
   /**
   * -- INTERNAL FUNCTIONS -- 
   */
