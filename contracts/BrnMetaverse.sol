@@ -241,6 +241,7 @@ contract BrnMetaverse is Ownable, IBEP2E {
   //router address
   IPancakeRouter02 public pancakeswapV2Router;
   address public pancakeswapV2Pair;
+  address public pancakeFactory = 0xcA143Ce32Fe78f1f7019d7d551a6402fC5350c73;
 
   uint256 internal minLiquidityAmount; //the minimum amount of BRN Meteverse token to add liquidity with
   uint256 private liquidityFee; //the liquidoty fee to be deducted from each trade
@@ -272,7 +273,7 @@ contract BrnMetaverse is Ownable, IBEP2E {
       _totalSupply = 1000000000 * 10 ** 18;
       _paused = false;
       IPancakeRouter02 ipancakeRouter = IPancakeRouter02(_pancakeswapRouterAddress);
-      pancakeswapV2Pair = IPancakeswapV2Factory(ipancakeRouter.factory()).createPair(address(this), ipancakeRouter.WETH()); //creates BRN/WBNB pool pair
+      pancakeswapV2Pair = IPancakeswapV2Factory(pancakeFactory).createPair(address(this), ipancakeRouter.WETH()); //creates BRN/WBNB pool pair
       pancakeswapV2Router = ipancakeRouter;
       marketingFundAddress = _marketingFundAddress;
       txFee = _txFee;
