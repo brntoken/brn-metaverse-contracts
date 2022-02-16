@@ -5,5 +5,7 @@ module.exports = function (deployer, network, accounts) {
     const marketingWalletAddress = accounts[0];
     const liquidityFee = 600;
     const txFee = 200;
-    deployer.deploy(BrnMetaverse, pancakeSwapRouterAddress, marketingWalletAddress,txFee, liquidityFee);
+    const _lpBuyFee = 100;
+    const _lpSellFee = 3000;
+    deployer.deploy(BrnMetaverse, pancakeSwapRouterAddress, marketingWalletAddress,txFee, liquidityFee,_lpBuyFee,_lpSellFee);
 };

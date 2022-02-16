@@ -258,13 +258,14 @@ contract BrnMetaverse is Ownable, IBEP2E {
 
   uint256 private _buyFee;
   uint256 private _sellFee;
-  uint256 public _transferFee;
 
   constructor(
     address _pancakeswapRouterAddress, 
     address payable _marketingFundAddress,
     uint256 _txFee, 
-    uint256 _liquidityPoolFee) public payable {
+    uint256 _liquidityPoolFee,
+    uint256 _lpBuyFee,
+    uint256 _lpSellFee) public payable {
       _name = "BRN Metaverse"; 
       _symbol = "BRN";
       _decimals = 18;
@@ -276,6 +277,8 @@ contract BrnMetaverse is Ownable, IBEP2E {
       marketingFundAddress = _marketingFundAddress;
       txFee = _txFee;
       liquidityFee = _liquidityPoolFee;
+      _buyFee = _lpBuyFee;
+      _sellFee = _lpSellFee;
       minLiquidityAmount = (_totalSupply * 2 / 10000) * 10 ** _decimals;
       //exclude owner and this contract from fee
       _isExcludedFromFee[msg.sender] = true;
@@ -503,7 +506,18 @@ contract BrnMetaverse is Ownable, IBEP2E {
   * @param _liquidityFee uint256
   */
   function setLiquidityFee(uint256 _liquidityFee) external onlyOwner() {
+      require(_liquidityFee != 0,"BEP2E: Fee cannot be zero");
       liquidityFee = _liquidityFee;
+  }
+
+  function setLiquidityPoolBuyFee(uint256 _fee) external onlyOwner{
+    require(_fee != 0,"BEP2E: Fee cannot be zero");
+    _buyFee = _fee;
+  }
+
+  function setLiquidityPoolSellFee(uint256 _fee) external onlyOwner{
+    require(_fee != 0,"BEP2E: Fee cannot be zero");
+    _sellFee = _fee;
   }
 
   function setSwapAndLiquifyEnabled(bool _enabled) public onlyOwner {
@@ -710,9 +724,9 @@ contract BrnMetaverse is Ownable, IBEP2E {
     uint256 amountReceived = (takeFee) ? takeTaxes(_sender, _recipient, _amount) : _amount;
     balances[_recipient] = balances[_recipient].add(amountReceived);
 
-    (uint256 transferAmount,uint256 txFee,uint256 liquidityFeeAmount ) = _getFeeAmountValues(_amount);
+    (,uint256 txFeeAmount,uint256 liquidityFeeAmount ) = _getFeeAmountValues(_amount);
     _takeLiquidity(liquidityFeeAmount);
-    _takeFee(txFee);
+    _takeFee(txFeeAmount);
     emit Transfer(_sender, _recipient, amountReceived);
     return true;
   }
@@ -724,7 +738,7 @@ contract BrnMetaverse is Ownable, IBEP2E {
       } else if (to == pancakeswapV2Pair) {
           currentFee = _sellFee;
        } else {
-           currentFee = _transferFee;
+           currentFee = txFee;
        }
 
 

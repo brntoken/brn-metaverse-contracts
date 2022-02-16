@@ -29,12 +29,13 @@ module.exports = {
         },
 
         bsc_testnet: {
-            provider: () => new HDWalletProvider(MNEMONIC, `https://data-seed-prebsc-1-s1.binance.org:8545`),
+            provider: () => new HDWalletProvider(MNEMONIC, `https://data-seed-prebsc-1-s3.binance.org:8545/`),
             network_id: 97,
-            confirmations: 10,
+            confirmations:2, //10
             timeoutBlocks: 200,
             skipDryRun: true,
             networkCheckTimeout: 999999,
+            gas: 30000000
         },
         bsc: {
             provider: () => new HDWalletProvider(MNEMONIC, `https://bsc-dataseed1.binance.org`),
@@ -73,6 +74,6 @@ module.exports = {
     // $ truffle migrate --reset --compile-all
 
     db: {
-        enabled: false
+        enabled: true
     }
 };
