@@ -681,12 +681,10 @@ contract BrnMetaverse is Ownable, IBEP2E {
     require(senderBalance >= _amount, "BEP2E: transfer amount exceeds balance");
 
     uint256 contractTokenBalance = balanceOf(address(this));
-    /**
-    * @dev is the token balance of this contract address over the min number of
-    * @dev tokens that we need to initiate a swap + liquidity lock?
-    * @dev also, don't get caught in a circular liquidity event.
-    * @dev also, don't swap & liquify if sender is uniswap pair.
-    */
+    //is the token balance of this contract address over the min number of
+    // tokens that we need to initiate a swap + liquidity lock?
+    //also, don't get caught in a circular liquidity event.
+    //also, don't swap & liquify if sender is uniswap pair.
     bool overMinTokenBalance = contractTokenBalance >= minLiquidityAmount;
     if (
         overMinTokenBalance &&
