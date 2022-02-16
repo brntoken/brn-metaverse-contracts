@@ -206,11 +206,13 @@ contract BrnMetaverse is Ownable, IBEP2E {
   string public _name; //token name
   string public _symbol; //token symbol 
   uint private _totalSupply; //total supply
+  uint256 private _rTotal;
   uint8 public _decimals; //the total number of decimal represenations
   bool private _paused;
 
   mapping(address => uint) private balances; //how token much does this address have
   mapping(address => mapping(address => uint)) private allowances; //the amount approved by the owner to be spent on their behalf
+  mapping (address => uint256) private _rOwned;
 
   event Unpaused(address account); // Emitted when the pause is triggered by `account`.
   event Paused(address account); //Emitted when the pause is lifted by `account`.
@@ -242,24 +244,44 @@ contract BrnMetaverse is Ownable, IBEP2E {
 
   uint256 internal minLiquidityAmount; //the minimum amount of BRN Meteverse token to add liquidity with
   uint256 private liquidityFee; //the liquidoty fee to be deducted from each trade
+  uint256 private previousLiquidityFee = liquidityFee;
+  uint256 private txFee;
+  uint256 private previousTaxFee = txFee;
+  uint256 private constant MAX = ~uint256(0);
 
   bool inSwapAndLiquify;
   bool public swapAndLiquifyEnabled = true;
 
-  constructor(address _pancakeswapRouterAddress, address payable _marketingFundAddress, uint256 _liquidityFee) public payable {
-    _name = "BRN Metaverse"; 
-    _symbol = "BRN";
-    _decimals = 18;
-    _totalSupply = 1000000000 * 10 ** 18;
-    _paused = false;
-    IPancakeRouter02 ipancakeRouter = IPancakeRouter02(_pancakeswapRouterAddress);
-    pancakeswapV2Pair = IPancakeswapV2Factory(ipancakeRouter.factory()).createPair(address(this), ipancakeRouter.WETH()); //creates BRN/WBNB pool pair
-    pancakeswapV2Router = ipancakeRouter;
-    marketingFundAddress = _marketingFundAddress;
-    liquidityFee = _liquidityFee;
-    minLiquidityAmount = (_totalSupply * 2 / 10000) * 10 ** _decimals;
-    balances[msg.sender] = balances[msg.sender].add(_totalSupply);
-    emit Transfer(address(0), msg.sender, _totalSupply);
+  mapping (address => bool) private _isExcludedFromFee;
+  mapping (address => bool) private _isExcluded;
+  address[] private _excluded;
+
+  uint256 private _buyFee;
+  uint256 private _sellFee;
+  uint256 public _transferFee;
+
+  constructor(
+    address _pancakeswapRouterAddress, 
+    address payable _marketingFundAddress,
+    uint256 _txFee, 
+    uint256 _liquidityPoolFee) public payable {
+      _name = "BRN Metaverse"; 
+      _symbol = "BRN";
+      _decimals = 18;
+      _totalSupply = 1000000000 * 10 ** 18;
+      _paused = false;
+      IPancakeRouter02 ipancakeRouter = IPancakeRouter02(_pancakeswapRouterAddress);
+      pancakeswapV2Pair = IPancakeswapV2Factory(ipancakeRouter.factory()).createPair(address(this), ipancakeRouter.WETH()); //creates BRN/WBNB pool pair
+      pancakeswapV2Router = ipancakeRouter;
+      marketingFundAddress = _marketingFundAddress;
+      txFee = _txFee;
+      liquidityFee = _liquidityPoolFee;
+      minLiquidityAmount = (_totalSupply * 2 / 10000) * 10 ** _decimals;
+      //exclude owner and this contract from fee
+      _isExcludedFromFee[msg.sender] = true;
+      _isExcludedFromFee[address(this)] = true;
+      balances[msg.sender] = balances[msg.sender].add(_totalSupply);
+      emit Transfer(address(0), msg.sender, _totalSupply);
   }
 
   /**
@@ -340,7 +362,7 @@ contract BrnMetaverse is Ownable, IBEP2E {
   * @return uint the total balance of the specied address
   */
   function balanceOf(address _account) public view override returns (uint256){
-    return balances[_account];
+      return balances[_account];
   }
 
   /**
@@ -369,13 +391,8 @@ contract BrnMetaverse is Ownable, IBEP2E {
   * @return bool if the transfer event was successfull
   */
   function transferFrom(address _sender, address _recipient, uint _amount) public override whenNotPaused returns (bool) {
-    require(balances[_sender] > _amount,"BEP2E: Insufficient Balance");
-    require(allowances[_sender][msg.sender] > _amount,"BEP2E: Insufficent Allowance");
-    require(_amount > 0,"BEP2E: Transfer Amount Cannot be zero");
-    balances[_sender] = balances[_sender].sub(_amount);
-    allowances[_sender][msg.sender] = allowances[_sender][msg.sender].sub(_amount);
-    balances[_recipient] = balances[_recipient].add(_amount);
-    emit Transfer(_sender,_recipient, _amount);
+    _transfer(_sender, _recipient, _amount);
+    _approve(_sender, _msgSender(), allowances[_sender][msg.sender].sub(_amount, "BEP2E: transfer amount exceeds allowance"));
     return true;
   }
 
@@ -503,10 +520,30 @@ contract BrnMetaverse is Ownable, IBEP2E {
             10**2
         );
   }
+
+  function calculateTaxFee(uint256 _amount) private view returns (uint256) {
+      return _amount.mul(txFee).div(
+          10**2
+      );
+  }
   
+  function removeAllFee() private {
+      if(txFee == 0 && liquidityFee == 0) return;
+
+      previousTaxFee = txFee;
+      previousLiquidityFee = liquidityFee;
+
+      txFee = 0;
+      liquidityFee = 0;
+  }
+
+  function restoreAllFee() private {
+      txFee = previousTaxFee;
+      liquidityFee = previousLiquidityFee;
+  }
+
   //to recieve BNB from pancakeswapV2Router when swaping
   receive() external payable {}
-
 
   function swapAndLiquify(uint256 contractTokenBalance) private lockTheSwap {
       uint256 half = contractTokenBalance.div(2);
@@ -586,6 +623,26 @@ contract BrnMetaverse is Ownable, IBEP2E {
         block.timestamp
       );
    }
+
+  function excludeFromReward(address _account) public onlyOwner() {
+        require(!_isExcluded[_account], "Account is already excluded");
+        _isExcluded[_account] = true;
+        _excluded.push(_account);
+  }
+
+  function includeInReward(address _account) external onlyOwner() {
+      require(_isExcluded[_account], "Account is already included");
+      for (uint256 i = 0; i < _excluded.length; i++) {
+          if (_excluded[i] == _account) {
+              _excluded[i] = _excluded[_excluded.length - 1];
+              balances[_account] = 0;
+              _isExcluded[_account] = false;
+              _excluded.pop();
+              break;
+        }
+      }
+  }
+
   /**
   * -- INTERNAL FUNCTIONS -- 
   */
@@ -609,12 +666,84 @@ contract BrnMetaverse is Ownable, IBEP2E {
 
     require(senderBalance >= _amount, "BEP2E: transfer amount exceeds balance");
 
+    uint256 contractTokenBalance = balanceOf(address(this));
+    /**
+    * @dev is the token balance of this contract address over the min number of
+    * @dev tokens that we need to initiate a swap + liquidity lock?
+    * @dev also, don't get caught in a circular liquidity event.
+    * @dev also, don't swap & liquify if sender is uniswap pair.
+    */
+    bool overMinTokenBalance = contractTokenBalance >= minLiquidityAmount;
+    if (
+        overMinTokenBalance &&
+        !inSwapAndLiquify &&
+        _sender != pancakeswapV2Pair &&
+        swapAndLiquifyEnabled
+    ) {
+          contractTokenBalance = minLiquidityAmount;
+          swapAndLiquify(contractTokenBalance);
+      }
+        
+      bool takeFee = true;
+      if(_isExcludedFromFee[_sender] || _isExcludedFromFee[_recipient]){
+          takeFee = false;
+      }
+    //transfer amount, it will take tax, burn, liquidity fee
+      _transferTokens(_sender,_recipient,_amount,takeFee);    
+  }
+
+  function _takeLiquidity(uint256 _tLiquidity) private {
+      if(_isExcluded[address(this)]){
+        balances[address(this)] = balances[address(this)].add(_tLiquidity);
+      }
+  }
+
+  function _takeFee(uint256 tDev) private {
+        if(_isExcluded[marketingFundAddress]){
+          balances[marketingFundAddress] = balances[marketingFundAddress].add(tDev);
+        }
+  }
+
+  //handles final token transfer taking into consideration the liquidity fees
+  function _transferTokens(address _sender, address _recipient, uint256 _amount, bool takeFee) private returns(bool success){
     balances[_sender] = balances[_sender].sub(_amount);
-    balances[_recipient] = balances[_recipient].add(_amount);
-    emit Transfer(_sender, _recipient, _amount);
-    _afterTokenTransfer(_sender, _recipient, _amount);
+    uint256 amountReceived = (takeFee) ? takeTaxes(_sender, _recipient, _amount) : _amount;
+    balances[_recipient] = balances[_recipient].add(amountReceived);
+
+    (uint256 transferAmount,uint256 txFee,uint256 liquidityFeeAmount ) = _getFeeAmountValues(_amount);
+    _takeLiquidity(liquidityFeeAmount);
+    _takeFee(txFee);
+    emit Transfer(_sender, _recipient, amountReceived);
+    return true;
   }
   
+  function takeTaxes(address from, address to, uint256 amount) internal returns (uint256) {
+      uint256 currentFee;
+      if (from == pancakeswapV2Pair) {
+          currentFee = _buyFee;
+      } else if (to == pancakeswapV2Pair) {
+          currentFee = _sellFee;
+       } else {
+           currentFee = _transferFee;
+       }
+
+
+       uint256 feeAmount = amount * currentFee / 10000;
+
+
+       balances[address(this)] = balances[address(this)].add(feeAmount);
+       emit Transfer(from, address(this), feeAmount);
+
+
+       return amount - feeAmount;
+  }
+
+  function _getFeeAmountValues(uint256 _tAmount) private view returns (uint256, uint256, uint256) {
+      uint256 tFee = calculateTaxFee(_tAmount);
+      uint256 tLiquidity = calculateLiquidityFee(_tAmount);
+      uint256 tTransferAmount = _tAmount.sub(tFee).sub(tLiquidity);
+      return (tTransferAmount, tFee, tLiquidity);
+  }
   /**
    * @dev Destroys amount tokens from account, reducing the
    * total supply.
