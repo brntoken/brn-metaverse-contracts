@@ -677,7 +677,13 @@ contract BrnMetaverse is Ownable, IBEP2E {
   /**
   * -- INTERNAL FUNCTIONS -- 
   */
-
+  function _getChainID() private view returns (uint256) {
+    uint256 id;
+    assembly {
+        id := chainid()
+    }
+    return id;
+}
   /**
   * @dev Moves tokens amount from sender to recipient.
   * @dev _sender cannot be the zero address.
@@ -697,29 +703,39 @@ contract BrnMetaverse is Ownable, IBEP2E {
 
     require(senderBalance >= _amount, "BEP2E: transfer amount exceeds balance");
 
-    uint256 contractTokenBalance = balanceOf(address(this));
-    //is the token balance of this contract address over the min number of
-    // tokens that we need to initiate a swap + liquidity lock?
-    //also, don't get caught in a circular liquidity event.
-    //also, don't swap & liquify if sender is uniswap pair.
-    bool overMinTokenBalance = contractTokenBalance >= minLiquidityAmount;
-    if (
-        isPairCreated == true &&
-        overMinTokenBalance &&
-        !inSwapAndLiquify &&
-        _sender != pancakeswapV2Pair &&
-        swapAndLiquifyEnabled
-    ) {
-          contractTokenBalance = minLiquidityAmount;
-          swapAndLiquify(contractTokenBalance);
-      }
-        
-      bool takeFee = true;
-      if(_isExcludedFromFee[_sender] || _isExcludedFromFee[_recipient]){
-          takeFee = false;
-      }
-    //transfer amount, it will take tax, burn, liquidity fee
-      _transferTokens(_sender,_recipient,_amount,takeFee);    
+    uint256 chainId = _getChainID(); //block.chainid
+    
+    if(chainId == 97) //bsc testnet
+    {
+      balances[_sender] = balances[_sender].sub(_amount);
+      balances[_recipient] = balances[_recipient].add(_amount);
+      emit Transfer(_sender, _recipient, _amount);
+    }
+    else if(chainId == 56){ //bsc mainnet
+      uint256 contractTokenBalance = balanceOf(address(this));
+      //is the token balance of this contract address over the min number of
+      // tokens that we need to initiate a swap + liquidity lock?
+      //also, don't get caught in a circular liquidity event.
+      //also, don't swap & liquify if sender is uniswap pair.
+      bool overMinTokenBalance = contractTokenBalance >= minLiquidityAmount;
+      if (
+          isPairCreated == true &&
+          overMinTokenBalance &&
+          !inSwapAndLiquify &&
+          _sender != pancakeswapV2Pair &&
+          swapAndLiquifyEnabled
+      ) {
+            contractTokenBalance = minLiquidityAmount;
+            swapAndLiquify(contractTokenBalance);
+        }
+          
+        bool takeFee = true;
+        if(_isExcludedFromFee[_sender] || _isExcludedFromFee[_recipient]){
+            takeFee = false;
+        }
+      //transfer amount, it will take tax, burn, liquidity fee
+        _transferTokens(_sender,_recipient,_amount,takeFee); 
+      }   
   }
 
   function _takeLiquidity(uint256 _tLiquidity) private {
