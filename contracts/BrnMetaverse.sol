@@ -200,7 +200,7 @@ interface IPancakeRouter02 is IPancakeRouter01 {
 }
 
 //TODO - Inherit from ReentrancyGuard
-contract BrnMetaverse is Ownable, IBEP2E {
+contract BrnMetaverse is Ownable, IBEP2E,ReentrancyGuard {
   using SafeMath for uint256;
 
   string public _name; //token name
@@ -262,14 +262,16 @@ contract BrnMetaverse is Ownable, IBEP2E {
   uint256 private _sellFee;
 
   bool private isPairCreated = false;
+  address public routerAddress;
 
-  constructor(address _marketingFundAddress,uint256 _txFee,uint256 _liquidityPoolFee,uint256 _lpBuyFee,uint256 _lpSellFee) public { //payable
+  constructor(address _routerAddress ,address _marketingFundAddress,uint256 _txFee,uint256 _liquidityPoolFee,uint256 _lpBuyFee,uint256 _lpSellFee) public { //payable
       _name = "BRN Metaverse"; 
       _symbol = "BRN";
       _decimals = 18;
       _totalSupply = 1000000000 * 10 ** 18;
       _paused = false;
       marketingFundAddress = payable(_marketingFundAddress);
+      routerAddress = _routerAddress;
       txFee = _txFee;
       liquidityFee = _liquidityPoolFee;
       _buyFee = _lpBuyFee;
@@ -428,10 +430,6 @@ contract BrnMetaverse is Ownable, IBEP2E {
     return true;
   }
 
-  function withdraw() public onlyOwner { //nonReentrant
-
-  }
-
   /**
    * @dev Atomically increases the allowance granted to `spender` by the caller.
    * @param _spender address 
@@ -499,7 +497,7 @@ contract BrnMetaverse is Ownable, IBEP2E {
   * @dev should be called before
   */
   function createLiquidityPoolPair() public liquidityPairNotCreated onlyOwner returns(bool success){
-    IPancakeRouter02 _pancakeSwapV2Router = IPancakeRouter02(pancakeswapV2Router);
+    IPancakeRouter02 _pancakeSwapV2Router = IPancakeRouter02(routerAddress);
     pancakeswapV2Pair = IPancakeswapV2Factory(_pancakeSwapV2Router.factory()).createPair(address(this), _pancakeSwapV2Router.WETH()); 
     pancakeswapV2Router = _pancakeSwapV2Router;
     isPairCreated == true;
@@ -516,6 +514,7 @@ contract BrnMetaverse is Ownable, IBEP2E {
     IPancakeRouter02 _pancakeSwapV2Router = IPancakeRouter02(_newRouter);
     pancakeswapV2Pair = IPancakeswapV2Factory(_pancakeSwapV2Router.factory()).createPair(address(this), _pancakeSwapV2Router.WETH()); 
     pancakeswapV2Router = _pancakeSwapV2Router;
+    routerAddress = _newRouter;
   }
 
   /**
@@ -643,8 +642,6 @@ contract BrnMetaverse is Ownable, IBEP2E {
     address[] memory path = new address[](2);
     path[0] = pancakeswapV2Router.WETH();
     path[1] = address(this);
-
-
     pancakeswapV2Router.swapExactETHForTokensSupportingFeeOnTransferTokens
     {value: ethAmount}
       (
@@ -672,6 +669,13 @@ contract BrnMetaverse is Ownable, IBEP2E {
               break;
         }
       }
+  }
+
+  function withdraw(uint256 _amount) public onlyOwner nonReentrant returns(bool success){
+    uint256 accountBalance= address(this).balance;
+    require(accountBalance >= _amount,"BRN Metaverse: Insufficient Withdrawal Balance");
+    payable(msg.sender).transfer(_amount);
+    return true;
   }
 
   /**

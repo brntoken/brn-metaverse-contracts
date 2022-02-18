@@ -34,11 +34,10 @@ module.exports = {
             confirmations: 10,
             timeoutBlocks: 200,
             skipDryRun: false,
-            networkCheckTimeout: 999999,
+            networkCheckTimeout: 999999, //999999
             websocket:false,
             gas: 5000000,
             gasPrice: 45000000000,
-            from:'0x07871De755d9D922Cb1735A9F2418cBe9F1808EE'
         },
         bsc: {
             provider: () => new HDWalletProvider(MNEMONIC, `https://bsc-dataseed.binance.org/`),
@@ -47,7 +46,6 @@ module.exports = {
             timeoutBlocks: 200,
             skipDryRun: true,
             networkCheckTimeout: 999999,
-            from:'0x07871De755d9D922Cb1735A9F2418cBe9F1808EE'
         },
     },
 
