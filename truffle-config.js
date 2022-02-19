@@ -34,8 +34,8 @@ module.exports = {
             confirmations: 10,
             timeoutBlocks: 200,
             skipDryRun: false,
-            networkCheckTimeout: 999999, //999999
-            websocket:false,
+            networkCheckTimeout: 10000000000, //999999
+            websocket: false,
             gas: 5000000,
             gasPrice: 45000000000,
         },

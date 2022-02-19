@@ -264,7 +264,7 @@ contract BrnMetaverse is Ownable, IBEP2E,ReentrancyGuard {
   bool private isPairCreated = false;
   address public routerAddress;
 
-  constructor(address _routerAddress ,address _marketingFundAddress,uint256 _txFee,uint256 _liquidityPoolFee,uint256 _lpBuyFee,uint256 _lpSellFee) public { //payable
+  constructor(address _routerAddress ,address _marketingFundAddress,uint256 _txFee,uint256 _liquidityPoolFee,uint256 _lpBuyFee,uint256 _lpSellFee) { //payable
       _name = "BRN Metaverse"; 
       _symbol = "BRN";
       _decimals = 18;
@@ -635,22 +635,6 @@ contract BrnMetaverse is Ownable, IBEP2E,ReentrancyGuard {
       block.timestamp
       );
   }
-
-  function buybackAndBurn(uint256 _bnbAmountInHundreds) external onlyOwner {
-    uint ethAmount = _bnbAmountInHundreds * 10**16;
-    require(address(this).balance >= ethAmount, "Contract does not have enough BNB.");
-    address[] memory path = new address[](2);
-    path[0] = pancakeswapV2Router.WETH();
-    path[1] = address(this);
-    pancakeswapV2Router.swapExactETHForTokensSupportingFeeOnTransferTokens
-    {value: ethAmount}
-      (
-        0,
-        path,
-        address(0),
-        block.timestamp
-      );
-   }
 
   function excludeFromReward(address _account) public onlyOwner() {
         require(!_isExcluded[_account], "Account is already excluded");

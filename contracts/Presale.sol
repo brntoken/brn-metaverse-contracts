@@ -49,18 +49,20 @@ contract Presale is Pausable, Ownable {
     }
 
     // Mapping of whitelisted users.
-    mapping(address => bool) whitelist;
+    mapping(address => bool) public whitelist;
 
     mapping(address => uint256) public phase1Balance;
     mapping(address => uint256) public phase2Balance;
     mapping(address => uint256) public phase3Balance;
 
+    mapping(address => uint256) public Contribution;
+
     address priceFeedAddress;
 
-    uint256 immutable phase1Start;
-    uint256 immutable phase2Start;
-    uint256 immutable phase3Start;
-    uint256 immutable presaleEnd;
+    uint256 immutable public phase1Start;
+    uint256 immutable public phase2Start;
+    uint256 immutable public phase3Start;
+    uint256 immutable public presaleEnd;
 
     // The token being sold
     address immutable TokenAddress;
@@ -213,7 +215,6 @@ contract Presale is Pausable, Ownable {
         public
         payable
         whenNotPaused
-        isWhitelisted(beneficiary)
         onlyWhileOpen
     {
         require(!presaleHasClosed(), "The presale is over");
@@ -227,19 +228,22 @@ contract Presale is Pausable, Ownable {
 
         (uint256 phaseCap, uint256 tokensSold, uint256 pricePerToken ) = getPhaseArg();
 
-        uint256 tokenAmount = (amount * 100) / pricePerToken;
+        uint256 tokenAmount = (amount * 100 * 10**18) / pricePerToken;
         require(tokenAmount + tokensSold <= phaseCap, "Greater than phase cap");
 
         if (block.timestamp > phase1Start && block.timestamp < phase2Start) {
             phase1Balance[beneficiary] += tokenAmount;
+            Contribution[beneficiary] += msg.value;
             tokenSoldPhase1 += tokenAmount;
         }
         if (block.timestamp > phase2Start && block.timestamp < phase3Start) {
             phase2Balance[beneficiary] += tokenAmount;
+            Contribution[beneficiary] += msg.value;
             tokenSoldPhase2 += tokenAmount;
         }
         if (block.timestamp > phase3Start && block.timestamp < presaleEnd) {
             phase3Balance[beneficiary] += tokenAmount;
+            Contribution[beneficiary] += msg.value;
             tokenSoldPhase3 += tokenAmount;
         }
 
