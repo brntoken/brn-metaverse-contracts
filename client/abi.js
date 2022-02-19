@@ -2,6 +2,11 @@ var abi = {
     Token: [{
             "inputs": [{
                     "internalType": "address",
+                    "name": "_routerAddress",
+                    "type": "address"
+                },
+                {
+                    "internalType": "address",
                     "name": "_marketingFundAddress",
                     "type": "address"
                 },
@@ -172,8 +177,7 @@ var abi = {
                 "type": "address"
             }],
             "stateMutability": "view",
-            "type": "function",
-            "constant": true
+            "type": "function"
         },
         {
             "inputs": [],
@@ -184,8 +188,7 @@ var abi = {
                 "type": "uint8"
             }],
             "stateMutability": "view",
-            "type": "function",
-            "constant": true
+            "type": "function"
         },
         {
             "inputs": [],
@@ -196,8 +199,7 @@ var abi = {
                 "type": "string"
             }],
             "stateMutability": "view",
-            "type": "function",
-            "constant": true
+            "type": "function"
         },
         {
             "inputs": [],
@@ -208,8 +210,7 @@ var abi = {
                 "type": "string"
             }],
             "stateMutability": "view",
-            "type": "function",
-            "constant": true
+            "type": "function"
         },
         {
             "inputs": [],
@@ -220,8 +221,7 @@ var abi = {
                 "type": "address"
             }],
             "stateMutability": "view",
-            "type": "function",
-            "constant": true
+            "type": "function"
         },
         {
             "inputs": [],
@@ -232,8 +232,7 @@ var abi = {
                 "type": "address"
             }],
             "stateMutability": "view",
-            "type": "function",
-            "constant": true
+            "type": "function"
         },
         {
             "inputs": [],
@@ -244,8 +243,7 @@ var abi = {
                 "type": "address"
             }],
             "stateMutability": "view",
-            "type": "function",
-            "constant": true
+            "type": "function"
         },
         {
             "inputs": [],
@@ -256,8 +254,7 @@ var abi = {
                 "type": "address"
             }],
             "stateMutability": "view",
-            "type": "function",
-            "constant": true
+            "type": "function"
         },
         {
             "inputs": [],
@@ -268,14 +265,24 @@ var abi = {
                 "type": "address"
             }],
             "stateMutability": "view",
-            "type": "function",
-            "constant": true
+            "type": "function"
         },
         {
             "inputs": [],
             "name": "renounceOwnership",
             "outputs": [],
             "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [],
+            "name": "routerAddress",
+            "outputs": [{
+                "internalType": "address",
+                "name": "",
+                "type": "address"
+            }],
+            "stateMutability": "view",
             "type": "function"
         },
         {
@@ -287,8 +294,7 @@ var abi = {
                 "type": "bool"
             }],
             "stateMutability": "view",
-            "type": "function",
-            "constant": true
+            "type": "function"
         },
         {
             "inputs": [{
@@ -303,8 +309,7 @@ var abi = {
         },
         {
             "stateMutability": "payable",
-            "type": "receive",
-            "payable": true
+            "type": "receive"
         },
         {
             "inputs": [],
@@ -315,8 +320,7 @@ var abi = {
                 "type": "bool"
             }],
             "stateMutability": "view",
-            "type": "function",
-            "constant": true
+            "type": "function"
         },
         {
             "inputs": [],
@@ -327,8 +331,7 @@ var abi = {
                 "type": "string"
             }],
             "stateMutability": "view",
-            "type": "function",
-            "constant": true
+            "type": "function"
         },
         {
             "inputs": [],
@@ -339,8 +342,7 @@ var abi = {
                 "type": "string"
             }],
             "stateMutability": "view",
-            "type": "function",
-            "constant": true
+            "type": "function"
         },
         {
             "inputs": [],
@@ -351,8 +353,7 @@ var abi = {
                 "type": "uint256"
             }],
             "stateMutability": "view",
-            "type": "function",
-            "constant": true
+            "type": "function"
         },
         {
             "inputs": [],
@@ -363,8 +364,7 @@ var abi = {
                 "type": "uint256"
             }],
             "stateMutability": "view",
-            "type": "function",
-            "constant": true
+            "type": "function"
         },
         {
             "inputs": [],
@@ -375,8 +375,7 @@ var abi = {
                 "type": "address"
             }],
             "stateMutability": "view",
-            "type": "function",
-            "constant": true
+            "type": "function"
         },
         {
             "inputs": [{
@@ -391,8 +390,7 @@ var abi = {
                 "type": "uint256"
             }],
             "stateMutability": "view",
-            "type": "function",
-            "constant": true
+            "type": "function"
         },
         {
             "inputs": [{
@@ -460,8 +458,7 @@ var abi = {
                 "type": "uint256"
             }],
             "stateMutability": "view",
-            "type": "function",
-            "constant": true
+            "type": "function"
         },
         {
             "inputs": [{
@@ -481,13 +478,6 @@ var abi = {
                 "name": "",
                 "type": "bool"
             }],
-            "stateMutability": "nonpayable",
-            "type": "function"
-        },
-        {
-            "inputs": [],
-            "name": "withdraw",
-            "outputs": [],
             "stateMutability": "nonpayable",
             "type": "function"
         },
@@ -647,17 +637,6 @@ var abi = {
         },
         {
             "inputs": [{
-                "internalType": "uint256",
-                "name": "_bnbAmountInHundreds",
-                "type": "uint256"
-            }],
-            "name": "buybackAndBurn",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
-        },
-        {
-            "inputs": [{
                 "internalType": "address",
                 "name": "_account",
                 "type": "address"
@@ -675,6 +654,21 @@ var abi = {
             }],
             "name": "includeInReward",
             "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [{
+                "internalType": "uint256",
+                "name": "_amount",
+                "type": "uint256"
+            }],
+            "name": "withdraw",
+            "outputs": [{
+                "internalType": "bool",
+                "name": "success",
+                "type": "bool"
+            }],
             "stateMutability": "nonpayable",
             "type": "function"
         }
@@ -805,8 +799,7 @@ var abi = {
                 "type": "uint256"
             }],
             "stateMutability": "view",
-            "type": "function",
-            "constant": true
+            "type": "function"
         },
         {
             "inputs": [],
@@ -817,8 +810,7 @@ var abi = {
                 "type": "uint256"
             }],
             "stateMutability": "view",
-            "type": "function",
-            "constant": true
+            "type": "function"
         },
         {
             "inputs": [],
@@ -829,8 +821,7 @@ var abi = {
                 "type": "string"
             }],
             "stateMutability": "view",
-            "type": "function",
-            "constant": true
+            "type": "function"
         },
         {
             "inputs": [],
@@ -841,8 +832,7 @@ var abi = {
                 "type": "address"
             }],
             "stateMutability": "view",
-            "type": "function",
-            "constant": true
+            "type": "function"
         },
         {
             "inputs": [],
@@ -853,8 +843,7 @@ var abi = {
                 "type": "bool"
             }],
             "stateMutability": "view",
-            "type": "function",
-            "constant": true
+            "type": "function"
         },
         {
             "inputs": [{
@@ -869,8 +858,7 @@ var abi = {
                 "type": "uint256"
             }],
             "stateMutability": "view",
-            "type": "function",
-            "constant": true
+            "type": "function"
         },
         {
             "inputs": [],
@@ -881,8 +869,7 @@ var abi = {
                 "type": "uint256"
             }],
             "stateMutability": "view",
-            "type": "function",
-            "constant": true
+            "type": "function"
         },
         {
             "inputs": [],
@@ -893,8 +880,7 @@ var abi = {
                 "type": "uint256"
             }],
             "stateMutability": "view",
-            "type": "function",
-            "constant": true
+            "type": "function"
         },
         {
             "inputs": [{
@@ -909,8 +895,7 @@ var abi = {
                 "type": "uint256"
             }],
             "stateMutability": "view",
-            "type": "function",
-            "constant": true
+            "type": "function"
         },
         {
             "inputs": [],
@@ -921,8 +906,7 @@ var abi = {
                 "type": "uint256"
             }],
             "stateMutability": "view",
-            "type": "function",
-            "constant": true
+            "type": "function"
         },
         {
             "inputs": [],
@@ -933,8 +917,7 @@ var abi = {
                 "type": "uint256"
             }],
             "stateMutability": "view",
-            "type": "function",
-            "constant": true
+            "type": "function"
         },
         {
             "inputs": [{
@@ -949,8 +932,7 @@ var abi = {
                 "type": "uint256"
             }],
             "stateMutability": "view",
-            "type": "function",
-            "constant": true
+            "type": "function"
         },
         {
             "inputs": [],
@@ -961,8 +943,7 @@ var abi = {
                 "type": "uint256"
             }],
             "stateMutability": "view",
-            "type": "function",
-            "constant": true
+            "type": "function"
         },
         {
             "inputs": [],
@@ -973,8 +954,7 @@ var abi = {
                 "type": "uint256"
             }],
             "stateMutability": "view",
-            "type": "function",
-            "constant": true
+            "type": "function"
         },
         {
             "inputs": [],
@@ -985,8 +965,7 @@ var abi = {
                 "type": "uint256"
             }],
             "stateMutability": "view",
-            "type": "function",
-            "constant": true
+            "type": "function"
         },
         {
             "inputs": [],
@@ -1004,8 +983,7 @@ var abi = {
                 "type": "uint256"
             }],
             "stateMutability": "view",
-            "type": "function",
-            "constant": true
+            "type": "function"
         },
         {
             "inputs": [],
@@ -1016,8 +994,7 @@ var abi = {
                 "type": "uint256"
             }],
             "stateMutability": "view",
-            "type": "function",
-            "constant": true
+            "type": "function"
         },
         {
             "inputs": [],
@@ -1028,8 +1005,7 @@ var abi = {
                 "type": "uint256"
             }],
             "stateMutability": "view",
-            "type": "function",
-            "constant": true
+            "type": "function"
         },
         {
             "inputs": [{
@@ -1051,8 +1027,7 @@ var abi = {
                 "type": "address"
             }],
             "stateMutability": "view",
-            "type": "function",
-            "constant": true
+            "type": "function"
         },
         {
             "inputs": [],
@@ -1063,8 +1038,7 @@ var abi = {
                 "type": "uint256"
             }],
             "stateMutability": "view",
-            "type": "function",
-            "constant": true
+            "type": "function"
         },
         {
             "inputs": [{
@@ -1079,13 +1053,11 @@ var abi = {
                 "type": "bool"
             }],
             "stateMutability": "view",
-            "type": "function",
-            "constant": true
+            "type": "function"
         },
         {
             "stateMutability": "payable",
-            "type": "receive",
-            "payable": true
+            "type": "receive"
         },
         {
             "inputs": [{
@@ -1129,8 +1101,7 @@ var abi = {
                 "type": "bool"
             }],
             "stateMutability": "view",
-            "type": "function",
-            "constant": true
+            "type": "function"
         },
         {
             "inputs": [],
@@ -1141,8 +1112,7 @@ var abi = {
                 "type": "bool"
             }],
             "stateMutability": "view",
-            "type": "function",
-            "constant": true
+            "type": "function"
         },
         {
             "inputs": [],
@@ -1153,8 +1123,7 @@ var abi = {
                 "type": "bool"
             }],
             "stateMutability": "view",
-            "type": "function",
-            "constant": true
+            "type": "function"
         },
         {
             "inputs": [],
@@ -1171,8 +1140,7 @@ var abi = {
                 }
             ],
             "stateMutability": "view",
-            "type": "function",
-            "constant": true
+            "type": "function"
         },
         {
             "inputs": [{
@@ -1187,8 +1155,7 @@ var abi = {
                 "type": "uint256"
             }],
             "stateMutability": "view",
-            "type": "function",
-            "constant": true
+            "type": "function"
         },
         {
             "inputs": [],
@@ -1210,8 +1177,7 @@ var abi = {
                 }
             ],
             "stateMutability": "view",
-            "type": "function",
-            "constant": true
+            "type": "function"
         },
         {
             "inputs": [{
@@ -1222,8 +1188,7 @@ var abi = {
             "name": "buyTokens",
             "outputs": [],
             "stateMutability": "payable",
-            "type": "function",
-            "payable": true
+            "type": "function"
         },
         {
             "inputs": [],
