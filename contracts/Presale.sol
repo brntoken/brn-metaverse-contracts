@@ -41,11 +41,6 @@ contract Presale is Pausable, Ownable {
         phase1Cap = (cap * 14) / 100;
         phase2Cap = (cap * 36) / 100;
         phase3Cap = (cap * 50) / 100;
-
-        phase1Start = block.timestamp;
-        phase2Start = phase1Start + 24 weeks;
-        phase3Start = phase2Start + 16 weeks;
-        presaleEnd = phase3Start + 8 weeks;
     }
 
     // Mapping of whitelisted users.
@@ -55,14 +50,18 @@ contract Presale is Pausable, Ownable {
     mapping(address => uint256) public phase2Balance;
     mapping(address => uint256) public phase3Balance;
 
+    mapping(address => uint256) public phase1USDAmount;
+    mapping(address => uint256) public phase2USDAmount;
+    mapping(address => uint256) public phase3USDAmount;
+
     mapping(address => uint256) public Contribution;
 
     address priceFeedAddress;
 
-    uint256 immutable public phase1Start;
-    uint256 immutable public phase2Start;
-    uint256 immutable public phase3Start;
-    uint256 immutable public presaleEnd;
+    uint256 public phase1Start = 0;
+    uint256 public phase2Start = 0;
+    uint256 public phase3Start = 0;
+    uint256 public presaleEnd = 0;
 
     // The token being sold
     address immutable TokenAddress;
@@ -101,6 +100,34 @@ contract Presale is Pausable, Ownable {
     );
 
     event TokenWithdrawal(address indexed beneficiary, uint256 amount);
+
+    function startNextPhase() external onlyOwner {
+        if (phase1Start == phase2Start && phase3Start == phase2Start) {
+            phase1Start = block.timestamp;
+            phase2Start = phase1Start + 24 weeks;
+            phase3Start = phase2Start + 16 weeks;
+            presaleEnd = phase3Start + 8 weeks;
+        } else if (block.timestamp > phase1Start && block.timestamp < phase2Start) {
+            require(
+                tokenSoldPhase1 == phase1Cap,
+                "Phase 1 cap has not been exhausted"
+            );
+            phase2Start = block.timestamp;
+        } else if (block.timestamp > phase2Start && block.timestamp < phase3Start) {
+            require(
+                tokenSoldPhase2 == phase2Cap,
+                "Phase 2 cap has not been exhausted"
+            );
+            phase3Start = block.timestamp;
+        }
+        if (block.timestamp > phase3Start && block.timestamp < presaleEnd) {
+            require(
+                tokenSoldPhase3 == phase3Cap,
+                "Phase 2 cap has not been exhausted"
+            );
+            presaleEnd = block.timestamp;
+        }
+    }
 
     /**
      * @dev Reverts if beneficiary is not whitelisted. Can be used when extending this contract.
@@ -157,9 +184,11 @@ contract Presale is Pausable, Ownable {
     function phase1HasClosed() public view returns (bool) {
         return block.timestamp > phase2Start;
     }
+
     function phase2HasClosed() public view returns (bool) {
         return block.timestamp > phase2Start;
     }
+
     function presaleHasClosed() public view returns (bool) {
         return block.timestamp > presaleEnd;
     }
@@ -185,7 +214,15 @@ contract Presale is Pausable, Ownable {
         buyTokens(msg.sender);
     }
 
-    function getPhaseArg() public view returns(uint256, uint256, uint256) {
+    function getPhaseArg()
+        public
+        view
+        returns (
+            uint256,
+            uint256,
+            uint256
+        )
+    {
         uint256 phaseCap;
         uint256 tokensSold;
         uint256 pricePerToken;
@@ -223,25 +260,48 @@ contract Presale is Pausable, Ownable {
 
         uint256 amount = coinToUSD(msg.value);
 
+        uint256 phaseUSDAmount;
+
+        if (block.timestamp > phase1Start && block.timestamp < phase2Start) {
+            phaseUSDAmount = phase1USDAmount[beneficiary];
+        }
+        if (block.timestamp > phase2Start && block.timestamp < phase3Start) {
+            phaseUSDAmount = phase2USDAmount[beneficiary];
+        }
+        if (block.timestamp > phase3Start && block.timestamp < presaleEnd) {
+            phaseUSDAmount = phase3USDAmount[beneficiary];
+        }
+
         require(amount >= 10 * 10**18, "The enter amount is below minimum");
         require(amount <= 10000 * 10**18, "The enter amount is above maximum");
+        require(
+            amount + phaseUSDAmount <= 10000 * 10**18,
+            "Your total purchase will be above the allowable maximum per wallet!"
+        );
 
-        (uint256 phaseCap, uint256 tokensSold, uint256 pricePerToken ) = getPhaseArg();
+        (
+            uint256 phaseCap,
+            uint256 tokensSold,
+            uint256 pricePerToken
+        ) = getPhaseArg();
 
         uint256 tokenAmount = (amount * 100 * 10**18) / pricePerToken;
         require(tokenAmount + tokensSold <= phaseCap, "Greater than phase cap");
 
         if (block.timestamp > phase1Start && block.timestamp < phase2Start) {
+            phase1USDAmount[beneficiary] += amount;
             phase1Balance[beneficiary] += tokenAmount;
             Contribution[beneficiary] += msg.value;
             tokenSoldPhase1 += tokenAmount;
         }
         if (block.timestamp > phase2Start && block.timestamp < phase3Start) {
+            phase2USDAmount[beneficiary] += amount;
             phase2Balance[beneficiary] += tokenAmount;
             Contribution[beneficiary] += msg.value;
             tokenSoldPhase2 += tokenAmount;
         }
         if (block.timestamp > phase3Start && block.timestamp < presaleEnd) {
+            phase3USDAmount[beneficiary] += amount;
             phase3Balance[beneficiary] += tokenAmount;
             Contribution[beneficiary] += msg.value;
             tokenSoldPhase3 += tokenAmount;
@@ -257,10 +317,16 @@ contract Presale is Pausable, Ownable {
 
     // withdraw ERC20 Tokens
     function withdrawToken() public whenNotPaused isWhitelisted(msg.sender) {
-        require(presaleHasClosed() || phase1HasClosed() || phase2HasClosed(), "All presale phases are still on is still on");
+        require(
+            presaleHasClosed() || phase1HasClosed() || phase2HasClosed(),
+            "All presale phases are still on is still on"
+        );
         uint256 balance;
         if (presaleHasClosed()) {
-            balance = phase1Balance[msg.sender] + phase2Balance[msg.sender] + phase3Balance[msg.sender];
+            balance =
+                phase1Balance[msg.sender] +
+                phase2Balance[msg.sender] +
+                phase3Balance[msg.sender];
             phase1Balance[msg.sender] = 0;
             phase2Balance[msg.sender] = 0;
             phase3Balance[msg.sender] = 0;
