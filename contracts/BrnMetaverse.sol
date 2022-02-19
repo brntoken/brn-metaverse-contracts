@@ -636,22 +636,6 @@ contract BrnMetaverse is Ownable, IBEP2E,ReentrancyGuard {
       );
   }
 
-  function buybackAndBurn(uint256 _bnbAmountInHundreds) external onlyOwner {
-    uint ethAmount = _bnbAmountInHundreds * 10**16;
-    require(address(this).balance >= ethAmount, "Contract does not have enough BNB.");
-    address[] memory path = new address[](2);
-    path[0] = pancakeswapV2Router.WETH();
-    path[1] = address(this);
-    pancakeswapV2Router.swapExactETHForTokensSupportingFeeOnTransferTokens
-    {value: ethAmount}
-      (
-        0,
-        path,
-        address(0),
-        block.timestamp
-      );
-   }
-
   function excludeFromReward(address _account) public onlyOwner() {
         require(!_isExcluded[_account], "Account is already excluded");
         _isExcluded[_account] = true;
