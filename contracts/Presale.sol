@@ -224,7 +224,7 @@ contract Presale is Pausable, Ownable {
         uint256 amount = coinToUSD(msg.value);
 
         require(amount >= 10 * 10**18, "The enter amount is below minimum");
-        require(amount <= 3000 * 10**18, "The enter amount is above maximum");
+        require(amount <= 10000 * 10**18, "The enter amount is above maximum");
 
         (uint256 phaseCap, uint256 tokensSold, uint256 pricePerToken ) = getPhaseArg();
 
