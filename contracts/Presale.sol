@@ -1,7 +1,7 @@
 //SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import "./BrnMetaverse.sol";
+//import "./BrnMetaverse.sol";
 import "@openzeppelin/contracts/security/Pausable.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
@@ -71,8 +71,8 @@ contract Presale is Pausable, Ownable {
     // address where funds are collected
     address public wallet;
 
-    //amount of wei raised
-    uint256 public weiRaised;
+    //amount of wei raised 
+    uint256 public weiRaised; 
 
     // amount of tokens sold in each phase
     uint256 public tokenSoldPhase1;

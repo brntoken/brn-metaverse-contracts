@@ -29,12 +29,15 @@ module.exports = {
         },
 
         bsc_testnet: {
-            provider: () => new HDWalletProvider(MNEMONIC, `https://data-seed-prebsc-2-s1.binance.org:8545/`),
+            provider: () => new HDWalletProvider(MNEMONIC, `https://data-seed-prebsc-1-s1.binance.org:8545/`),
             network_id: 97,
             gas: 5500000,
             confirmations: 10,
             timeoutBlocks: 200,
-            networkCheckTimeout: 1000000000,
+            skipDryRun: true,
+            websocket:false,
+            networkCheckTimeout: 999999, //1000000000
+            from:'0x36017AAdeF5a421de9bC6E6E58bF10B3d6b92882'
         },
         bsc: {
             provider: () => new HDWalletProvider(MNEMONIC, `https://bsc-dataseed.binance.org/`),
