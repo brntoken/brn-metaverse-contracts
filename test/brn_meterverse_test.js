@@ -1,4 +1,4 @@
-const BrnMeterverse = artifacts.require('BrnMeterverse');
+const BrnMeterverse = artifacts.require('BrnMetaverse');
 const web3 = require('web3');
 const assert = require('assert');
 

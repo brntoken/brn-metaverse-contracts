@@ -1,3 +1,4 @@
 node_modules/
 .env
 build
+contracts/Presale2.sol

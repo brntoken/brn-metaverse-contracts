@@ -880,6 +880,30 @@ var abi = {
         },
         {
             "inputs": [],
+            "name": "phase1End",
+            "outputs": [{
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }],
+            "stateMutability": "view",
+            "type": "function",
+            "constant": true
+        },
+        {
+            "inputs": [],
+            "name": "phase1LockPeriod",
+            "outputs": [{
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }],
+            "stateMutability": "view",
+            "type": "function",
+            "constant": true
+        },
+        {
+            "inputs": [],
             "name": "phase1Start",
             "outputs": [{
                 "internalType": "uint256",
@@ -925,6 +949,30 @@ var abi = {
         {
             "inputs": [],
             "name": "phase2Cap",
+            "outputs": [{
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }],
+            "stateMutability": "view",
+            "type": "function",
+            "constant": true
+        },
+        {
+            "inputs": [],
+            "name": "phase2End",
+            "outputs": [{
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }],
+            "stateMutability": "view",
+            "type": "function",
+            "constant": true
+        },
+        {
+            "inputs": [],
+            "name": "phase2LockPeriod",
             "outputs": [{
                 "internalType": "uint256",
                 "name": "",
@@ -992,6 +1040,30 @@ var abi = {
         },
         {
             "inputs": [],
+            "name": "phase3End",
+            "outputs": [{
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }],
+            "stateMutability": "view",
+            "type": "function",
+            "constant": true
+        },
+        {
+            "inputs": [],
+            "name": "phase3LockPeriod",
+            "outputs": [{
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }],
+            "stateMutability": "view",
+            "type": "function",
+            "constant": true
+        },
+        {
+            "inputs": [],
             "name": "phase3Start",
             "outputs": [{
                 "internalType": "uint256",
@@ -1009,18 +1081,6 @@ var abi = {
                 "type": "address"
             }],
             "name": "phase3USDAmount",
-            "outputs": [{
-                "internalType": "uint256",
-                "name": "",
-                "type": "uint256"
-            }],
-            "stateMutability": "view",
-            "type": "function",
-            "constant": true
-        },
-        {
-            "inputs": [],
-            "name": "presaleEnd",
             "outputs": [{
                 "internalType": "uint256",
                 "name": "",
@@ -1074,6 +1134,18 @@ var abi = {
             "constant": true
         },
         {
+            "inputs": [],
+            "name": "totalTokensOwnedByInvestors",
+            "outputs": [{
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }],
+            "stateMutability": "view",
+            "type": "function",
+            "constant": true
+        },
+        {
             "inputs": [{
                 "internalType": "address",
                 "name": "newOwner",
@@ -1109,22 +1181,6 @@ var abi = {
             "constant": true
         },
         {
-            "inputs": [{
-                "internalType": "address",
-                "name": "",
-                "type": "address"
-            }],
-            "name": "whitelist",
-            "outputs": [{
-                "internalType": "bool",
-                "name": "",
-                "type": "bool"
-            }],
-            "stateMutability": "view",
-            "type": "function",
-            "constant": true
-        },
-        {
             "stateMutability": "payable",
             "type": "receive",
             "payable": true
@@ -1132,39 +1188,6 @@ var abi = {
         {
             "inputs": [],
             "name": "startNextPhase",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
-        },
-        {
-            "inputs": [{
-                "internalType": "address[]",
-                "name": "_beneficiaries",
-                "type": "address[]"
-            }],
-            "name": "addManyToWhitelist",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
-        },
-        {
-            "inputs": [{
-                "internalType": "address",
-                "name": "_beneficiary",
-                "type": "address"
-            }],
-            "name": "addToWhitelist",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
-        },
-        {
-            "inputs": [{
-                "internalType": "address",
-                "name": "_beneficiary",
-                "type": "address"
-            }],
-            "name": "removeFromWhitelist",
             "outputs": [],
             "stateMutability": "nonpayable",
             "type": "function"
@@ -1196,6 +1219,42 @@ var abi = {
         {
             "inputs": [],
             "name": "presaleHasClosed",
+            "outputs": [{
+                "internalType": "bool",
+                "name": "",
+                "type": "bool"
+            }],
+            "stateMutability": "view",
+            "type": "function",
+            "constant": true
+        },
+        {
+            "inputs": [],
+            "name": "phase1WithdrawalReach",
+            "outputs": [{
+                "internalType": "bool",
+                "name": "",
+                "type": "bool"
+            }],
+            "stateMutability": "view",
+            "type": "function",
+            "constant": true
+        },
+        {
+            "inputs": [],
+            "name": "phase2WithdrawalReach",
+            "outputs": [{
+                "internalType": "bool",
+                "name": "",
+                "type": "bool"
+            }],
+            "stateMutability": "view",
+            "type": "function",
+            "constant": true
+        },
+        {
+            "inputs": [],
+            "name": "phase3WithdrawalReach",
             "outputs": [{
                 "internalType": "bool",
                 "name": "",
@@ -1273,6 +1332,13 @@ var abi = {
             "stateMutability": "payable",
             "type": "function",
             "payable": true
+        },
+        {
+            "inputs": [],
+            "name": "withdrawRemainingTokens",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
         },
         {
             "inputs": [],
