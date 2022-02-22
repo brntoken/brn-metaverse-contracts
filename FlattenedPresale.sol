@@ -314,6 +314,7 @@ interface IERC20 {
 
 // File: @openzeppelin\contracts\interfaces\IERC20.sol
 
+// OpenZeppelin Contracts v4.4.1 (interfaces/IERC20.sol)
 
 // File: contracts\Presale.sol
 
