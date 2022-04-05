@@ -991,7 +991,7 @@ contract BrnMetaverse is Ownable, IBEP2E,ReentrancyGuard {
     IPancakeRouter02 _pancakeSwapV2Router = IPancakeRouter02(routerAddress);
     pancakeswapV2Pair = IPancakeswapV2Factory(_pancakeSwapV2Router.factory()).createPair(address(this), _pancakeSwapV2Router.WETH()); 
     pancakeswapV2Router = _pancakeSwapV2Router;
-    isPairCreated == true;
+    isPairCreated = true;
     return true;
   }
 
